@@ -24,6 +24,6 @@ public interface SurveyDao {
 	 
 	 List<SurveyQuestionsVO> selectQuestions(int svnum);
 	 
-	 List<Map<String, Object>> selectAverage(Map<String, Object> params);
+	 List<Map<String, Object>> selectAverages();
 	 
 }
