@@ -66,18 +66,18 @@
 		</if>
 		) numbered_rows WHERE row_num BETWEEN #{begin} AND #{end} </select>
 	<select id="totalCount" resultType="int" parameterType="map"> SELECT
-		COUNT(*) cnt FROM community <if
+		COUNT(*) cnt FROM member <if
 			test="searchType != null and searchValue != null">
 			<where>
 				<choose>
 					<when test="searchType == 1">
-						cwriter like '%' || #{searchValue} || '%'
+						name like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 2">
-						ctitle like '%' || #{searchValue} || '%'
+						email like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 3">
-						ccontent like '%' || #{searchValue} || '%'
+						authority like '%' || #{searchValue} || '%'
 					</when>
 				</choose>
 			</where>
