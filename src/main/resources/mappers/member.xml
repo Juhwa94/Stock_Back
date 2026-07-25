@@ -18,7 +18,7 @@
 
 	<!-- 이메일 중복 체크 -->
 	<select id="countByEmail" resultType="int" parameterType="string">
-		SELECT COUNT(email) FROM member WHERE email = #{email} AND NVL(grade, 'MEMBER') != 'WITHDRAWN'
+		SELECT COUNT(email) FROM member WHERE email = #{email} 
 	</select>
 
 	<!-- 닉네임 중복 체크 -->
