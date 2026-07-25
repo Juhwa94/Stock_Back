@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.ictedu.projectBack.service.ReplyService;
@@ -25,7 +26,7 @@ public class ReplyController {
 	    }
 
 	    @GetMapping("/list")
-	    public List<ReplyVO> listReply(int num){
+	    public List<ReplyVO> listReply(@RequestParam("num") int num){
 	        return replyService.listReply(num);
 	    }
 	}
