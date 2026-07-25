@@ -27,7 +27,7 @@
 	</select>
 
 	<!-- 내 정보 조회 -->
-	<select id="getMemberById" parameterType="string" resultType="mvo">
+	<select id="getMemberByEmail" parameterType="string" resultType="mvo">
 		SELECT mnum, name, nick, email, mphone, grade, storeaddr, authority, regdate
 		FROM member WHERE email = #{email}
 	</select>

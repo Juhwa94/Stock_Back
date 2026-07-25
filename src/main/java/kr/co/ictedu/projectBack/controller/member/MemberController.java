@@ -47,9 +47,13 @@ public class MemberController {
 	    return vo;
 	}
 	@PostMapping("/update")
-    public int updateMyInfo(@RequestBody MemberVO vo) {
-        return memberService.updateMember(vo);
-    }
+	public int updateMyInfo(@RequestBody MemberVO vo) {
+
+	    System.out.println("받은 nick = " + vo.getNick());
+	    System.out.println("받은 email = " + vo.getEmail());
+
+	    return memberService.updateMember(vo);
+	}
 	@DeleteMapping("/withdraw")
 	public String memberWithdraw(
 	        @RequestParam("num") int num,
