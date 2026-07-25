@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface RevenueDao {
 
-	void add(String rmonth);
+	void addRevenue(String rmonth);
 }

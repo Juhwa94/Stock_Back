@@ -5,11 +5,10 @@
 
 	<insert id="addComment" parameterType="reply">
 	insert into reply values(reply_seq.nextVal,
-	#{rcode},#{rwriter},
-	#{rcontent}, sysdate,2)
+	#{rcode},#{rwriter},#{rcontent},sysdate,1)
 	</insert>
 
-	<select id="listComment" resultType="reply" parameterType="int">
-	select * from reply where rcode=#{rnum} order by 1 desc 
+	<select id="listReply" resultType="reply" parameterType="int">
+		select rnum, rwriter,rcontent, rdate from reply where rcode=#{num} order by 1 desc 
 	</select>
 </mapper>

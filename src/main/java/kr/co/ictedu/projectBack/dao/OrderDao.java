@@ -6,15 +6,12 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.ictedu.projectBack.vo.OrderFormVO;
+import kr.co.ictedu.projectBack.vo.OrderItemVO;
 
 @Mapper
 public interface OrderDao {
 
-	void add(OrderFormVO ofvo);
-	
-	List<Map<String, Object>> list(Map<String, Object> map);
-	
-	OrderFormVO detail(int ofnum);
-	
-	void delete(int ofnum);
+	void addOrderForm(OrderFormVO ofvo);
+	void addOrderItem(List<OrderItemVO> olist);
+
 }

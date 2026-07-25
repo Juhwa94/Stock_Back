@@ -1,16 +1,16 @@
 package kr.co.ictedu.projectBack.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.ictedu.projectBack.vo.ProductVO;
+import kr.co.ictedu.projectBack.vo.ProductFormVO;
+import kr.co.ictedu.projectBack.vo.ProductItemVO;
+
 
 @Mapper
 public interface ProductDao {
 
-	void add(ProductVO pvo);
-	
-	List<ProductVO> list(Map<String, Object> map);	
+	void addProductForm(ProductFormVO pfvo);
+	void addProductItem(List<ProductItemVO> plist);	
 }
