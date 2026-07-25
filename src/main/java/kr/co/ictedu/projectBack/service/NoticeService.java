@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import kr.co.ictedu.projectBack.dao.NoticeDao;
 import kr.co.ictedu.projectBack.vo.NoticeVO;
 
@@ -17,6 +16,10 @@ public class NoticeService {
 	
 	public void add(NoticeVO vo) {
 		noticeDao.add(vo);
+	}
+	
+	public void update(NoticeVO vo) {
+		noticeDao.update(vo);
 	}
 	
 	public List<NoticeVO> list(Map<String, String> map) {
@@ -35,7 +38,7 @@ public class NoticeService {
 		hit(num);
 		return noticeDao.detail(num);
 	}
-	
+
 	public void del(int num) {
 		noticeDao.del(num);
 	}
