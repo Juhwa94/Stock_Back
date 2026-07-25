@@ -4,23 +4,23 @@
 <mapper namespace="kr.co.ictedu.projectBack.dao.NoticeDao">
 	<insert id="add" parameterType="nomivo">
 		INSERT INTO notice values(notice_seq.NEXTVAL,
-		#{ntitle}, #{nwriter}, #{ncontent},#{membernum}, 0, SYSDATE)
+		#{ntitle}, #{nwriter}, SYSDATE, #{ncontent},  0, #{membernum}  )
 	</insert>
 	<select id="list" parameterType="map" resultType="nomivo"> SELECT nnum, ntitle,
-		nwriter, NCONTENT, nhit, ndate row_num FROM (SELECT nnum,
-		ntitle, nwriter, NCONTENT, nhit, ndate, ROW_NUMBER() OVER(ORDER
-		BY num desc) AS row_num FROM notice <if
+		nwriter, NCONTENT, nhit, ndate, membernum, row_num FROM (SELECT nnum,
+		ntitle, nwriter, NCONTENT, nhit, ndate, membernum, ROW_NUMBER() OVER(ORDER
+		BY nnum desc) AS row_num FROM notice <if
 			test="searchType != null and searchValue != null">
 			<where>
 				<choose>
 					<when test="searchType == 1">
-						writer like '%' || #{searchValue} || '%'
+						nwriter like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 2">
-						title like '%' || #{searchValue} || '%'
+						ntitle like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 3">
-						content like '%' || #{searchValue} || '%'
+						ncontent like '%' || #{searchValue} || '%'
 					</when>
 				</choose>
 			</where>
@@ -32,29 +32,39 @@
 			<where>
 				<choose>
 					<when test="searchType == 1">
-						writer like '%' || #{searchValue} || '%'
+						nwriter like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 2">
-						title like '%' || #{searchValue} || '%'
+						ntitle like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 3">
-						content like '%' || #{searchValue} || '%'
+						ncontent like '%' || #{searchValue} || '%'
 					</when>
 				</choose>
 			</where>
 		</if>
 	</select>
 
+<update id="update" parameterType="nomivo">
+    UPDATE notice
+    SET
+        ntitle = #{ntitle},
+        nwriter = #{nwriter},
+        ncontent = #{ncontent}
+    WHERE nnum = #{nnum}
+</update>
+
+
 	<update id="hit" parameterType="int">
-		UPDATE notice set hit=hit+1 WHERE num=#{num}
+		UPDATE notice set nhit=nhit+1 WHERE nnum=#{nnum}
 	</update>
 
-	<select id="detail" parameterType="int" resultType="comivo">
-		SELECT nnum, ntitle, nwriter, NCONTENT, nhit, ndate FROM notice
-		WHERE num=#{num}
+	<select id="detail" parameterType="int" resultType="nomivo">
+		SELECT nnum, ntitle, nwriter, NCONTENT, nhit, ndate, membernum FROM notice
+		WHERE nnum=#{nnum}
 	</select>
 
 	<delete id="del" parameterType="int">
-		DELETE FROM notice WHERE num=#{num}
+		DELETE FROM notice WHERE nnum=#{nnum}
 	</delete>
 </mapper>

@@ -12,6 +12,7 @@ import lombok.Setter;
 public class CommunityVO {
 	private int cnum;
 	private int chit;
+	private int membernum;
 	private String ctitle;
 	private String cwriter;
 	private String ccontent;

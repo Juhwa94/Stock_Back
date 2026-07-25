@@ -15,4 +15,5 @@ public interface NoticeDao {
 	void hit(int num);
 	NoticeVO detail(int num);
 	void del(int num);
+	void update(NoticeVO vo);
 }

@@ -52,13 +52,13 @@ public class CommunityController {
 	@Value("${spring.servlet.multipart.location}")
 	private String filePath;
 	
-	@GetMapping("/getPath")
+	@GetMapping("/coPath")
 	public String getMethodName() {
 		System.out.println("Path  : " + filePath);
 		return filePath;
 	}
 	
-	@PostMapping("/communityAdd")
+	@PostMapping("/commAdd")
 	public ResponseEntity<?> communityAdd(CommunityVO vo, HttpServletRequest request) {
 		
 		
@@ -94,7 +94,7 @@ public class CommunityController {
 	return ResponseEntity.ok().body("게시글 등록 성공!");
 	}
 	
-	@RequestMapping("/communityList")
+	@RequestMapping("/coList")
 	public Map<String, Object> upCommunityList(
 			@RequestParam Map<String, String> paramMap, 
 			HttpServletRequest request
@@ -129,7 +129,7 @@ public class CommunityController {
 	}
 	
 	
-	@GetMapping("/detail")
+	@GetMapping("/coDetail")
 	public CommunityVO communityDetail(@RequestParam("num") int num) {
 		return comm.detail(num);
 	}
@@ -154,7 +154,7 @@ public class CommunityController {
 //		
 //		return upBoardCommService.listComment(num);
 //	}
-	@PostMapping("update")
+	@PostMapping("coUpdate")
 	public ResponseEntity<?> update(CommunityVO vo){
 		
 		MultipartFile mf = vo.getMfile();
@@ -182,11 +182,10 @@ public class CommunityController {
 	}
 	
 	
-	@DeleteMapping("/delete")
+	@DeleteMapping("/coDelete")
 	public ResponseEntity<?> communityDelete(@RequestParam("num") int num) {
 		
 		CommunityVO vo = comm.get(num);
-		
 		if(vo.getCimgn() != null) {
 			File file = new File(filePath, vo.getCimgn());
 			
