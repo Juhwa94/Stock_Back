@@ -2,6 +2,7 @@ package kr.co.ictedu.projectBack.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,31 @@ public class OrderController {
 		@RequestPart("orderData") OrderFormVO orderFormVO, // JSON 문자열로 넘어온 order 
 		@RequestParam("signature") MultipartFile file // signature로 넘어온 파일
 	) {
-
 		if (!file.isEmpty()) {
 			String originalFilename = file.getOriginalFilename();
 			File f = new File(filePath + "/signature/", originalFilename);
 			try {
 				file.transferTo(f);// 업로드 완료
+				
+		        String pureName = originalFilename;
+		        if (originalFilename != null && originalFilename.contains(".")) {
+		            pureName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+		        }
+		        orderFormVO.setOimg(pureName); 
 				orderFormVO.setOfile(file); // 이미지들의 이름을 vo저장
+				
+				//=========검증영역
+				System.out.println(orderFormVO.getOfile()+ " : " + orderFormVO.getOimg());
+				System.out.println(orderFormVO.getOname());
+				
+				List<OrderItemVO> volist =  orderFormVO.getOrderItem();
+				
+				for (OrderItemVO vo : volist) {
+					System.out.println(vo.getOfnum());
+					System.out.println(vo.getOiname());
+					System.out.println(vo.getOinum());
+				}
+				
 				orderService.addOrder(orderFormVO);
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();

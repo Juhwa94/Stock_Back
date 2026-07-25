@@ -23,14 +23,14 @@
 		INSERT ALL
 		<foreach collection="list" item="item">
 			INTO SURVEY_RESULT (MNUM, SVNUM, QUESTIONS_ID, RATING, REQUEST, RESDATE)
-			VALUES (#{item.mnum}, #{item.svnum}, #{item.questions_id}, #{item.rating}, #{item.request}, SYSDATE)
+			VALUES (#{item.mnum}, #{item.svnum}, #{item.questions_id}, #{item.rating}, #{item.request, jdbcType=CLOB}, SYSDATE)
 		</foreach>
 		SELECT 1 FROM DUAL
 	</insert>
 	
 	<!--최신 평가지 출력 매퍼 쿼리문-->
 	<select id="selectSurvey" resultType="surveyvo">
-		SELECT svnum, code, sub, sdate FROM SURVEY
+		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
 		WHERE SVNUM = (SELECT MAX(SVNUM) FROM SURVEY)
 	</select>
 	
@@ -41,16 +41,16 @@
 		ORDER BY QUESTIONS_ID
 	</select>
 	
-	<select id="selectAvarages" parameterType="int" resultType="java.util.List">
-		SELECT AVG(RATING) AS AVG FROM SURVEY
-		WHERE QUESTIONS_ID IN 
-		<foreach collection="list" item="item" open="(" separator="," close=")">
-			 #{item}
-		</foreach>
-		AND SVNUM = #{SVNUM} GROUP BY QUESTIONS_ID ORDER BY QUESTIONS_ID
+	<!--평가지 별, 질문 하나 당 평균 출력 매퍼 쿼리문-->
+	<select id="selectAverages" resultType="map">
+		SELECT questions_id, ROUND(AVG(RATING),1) AS avg FROM SURVEY_RESULT
+		WHERE RESDATE = (SELECT MAX(RESDATE) FROM SURVEY)
+		GROUP BY QUESTIONS_ID
+		ORDER BY QUESTIONS_ID
 	</select>
+	<!--List<Map<String, Object>> selectAverages();-->
 	
-	<!--평가지 삭제 매퍼 쿼리문-->
+	<!--가장 오래된 평가지 삭제 매퍼 쿼리문-->
 	<delete id="deleteSurvey">
 		DELETE FROM SURVEY
 		WHERE SVNUM = (SELECT MIN(SVNUM) FROM SURVEY) PURGE

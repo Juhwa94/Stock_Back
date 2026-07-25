@@ -20,13 +20,21 @@ public class OrderService {
 	@Transactional
 	public void addOrder(OrderFormVO ofvo) {
 		orderDao.addOrderForm(ofvo);
-		List<OrderItemVO> list = ofvo.getOList();
+		
+		int ofnumSeq = ofvo.getOfnum(); 
+		int sum_num = 1;
+		
+		List<OrderItemVO> list = ofvo.getOrderItem();
 		for (OrderItemVO itemvo : list) {
 			int price = itemvo.getOiprice();
 			int amount = itemvo.getOiamount();
 			int sumprice = price * amount;
 			itemvo.setOisumprice(sumprice);
+			itemvo.setOfnum(ofnumSeq);
+			itemvo.setOinum(sum_num);
+			sum_num++;
 		}
+		ofvo.setMnum(5);
 		orderDao.addOrderItem(list);
 	}
 }

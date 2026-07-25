@@ -51,32 +51,16 @@ public class SurveyService {
 	 * @return 
 	 * */
 	@Transactional
-	public void addResult(SurveyVO svo) {
+	public void addResult(List<SurveyResultVO> srList) {
 		
-		int svnum = svo.getSvnum();
-		List<SurveyResultVO> resultList = new ArrayList<>();
-		
-		if(svo != null) {
-			int i = 1;
-			for(SurveyResultVO r : svo.getResult()) {
-				SurveyResultVO srvo = new SurveyResultVO();
-				
-				srvo.setMnum(r.getMember().getMnum());
-				srvo.setSvnum(svnum);
-				srvo.setQuestions_id(i);
-				srvo.setRating(r.getRating());
-				
-				if(r.getRequest() != null) {
-					srvo.setRequest(r.getRequest());
-				} else {
-					srvo.setRequest("");
-				}
-				
-				i++;
-				resultList.add(srvo);
-			}
+		if(srList != null) {
+			
+			for (int i = 0; i < srList.size(); i++) {
+		        SurveyResultVO result = srList.get(i);
+		        result.setQuestions_id(i + 1);
+		    }	
+			surveyDao.insertResult(srList);
 		}
-		surveyDao.insertResult(resultList);
 	}
 	
 	/**
@@ -112,7 +96,7 @@ public class SurveyService {
 		params.put("svnum", svo.getSvnum());
 		params.put("list", questionid);
 		
-		List<Map<String, Object>> resList = surveyDao.selectAverage(params);
+		List<Map<String, Object>> resList = surveyDao.selectAverages();
 		
 		Map<String, Object> resMap = new HashMap<>();
 		resMap.put("svnum", svo.getSvnum());
@@ -123,6 +107,5 @@ public class SurveyService {
 		
 		return resMap;
 	}
-	
 }
 

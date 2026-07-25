@@ -33,7 +33,7 @@ public class InquiryController {
 	@Autowired
 	private PagingService paginService;
 	
-	@Value("${spring.servlet.multipart.location")
+	@Value("${spring.servlet.multipart.location}")
 	private String filePath;
 	
 	@GetMapping("/getPath")
@@ -71,8 +71,10 @@ public class InquiryController {
 		} 
 		return ResponseEntity.ok().body("업로드 성공!");
 	}
+	
 	@Autowired
 	private ReplyService replyService;
+	
 	@PostMapping("/replyAdd")
 	public ResponseEntity<?> upBoardComm(@RequestBody ReplyVO vo){
 		replyService.addComment(vo);

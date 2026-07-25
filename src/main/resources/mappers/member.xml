@@ -37,11 +37,62 @@
 		UPDATE member SET nick = #{nick}, mphone = #{mphone}, storeaddr = #{storeaddr}
 		WHERE email = #{email}
 	</update>
-	
+
 	<!--  회원탈퇴 -->
 	<update id="deleteMember" parameterType="int">
-    	UPDATE member SET grade = 'WITHDRAWN' WHERE mnum = #{mnum}
+		UPDATE member SET grade = 'WITHDRAWN' WHERE mnum = #{mnum}
 	</update>
-	
-	
+
+	<!-- 전체 회원 조회 -->
+	<select id="memberList" parameterType="map" resultType="mvo"> SELECT mnum,
+		name, nick, email, mphone, grade, authority, storeaddr,
+		regdate row_num FROM (SELECT mnum, name, nick, email, mphone, 
+		storeaddr, grade, authority, regdate, ROW_NUMBER() OVER(ORDER BY mnum
+		desc) AS row_num FROM member <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						name like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						email like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						authority like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+		) numbered_rows WHERE row_num BETWEEN #{begin} AND #{end} </select>
+	<select id="totalCount" resultType="int" parameterType="map"> SELECT
+		COUNT(*) cnt FROM community <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						cwriter like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						ctitle like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						ccontent like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+	</select>
+
+	<!-- 체크된 회원 선택 변경 -->
+	<update id="updateGrade" parameterType="map"> UPDATE member SET grade =
+		#{grade} WHERE mnum IN <foreach collection="memberNums"
+			item="mnum"
+			open="("
+			separator=","
+			close=")">
+			#{mnum}
+		</foreach>
+	</update>
+
 </mapper>
