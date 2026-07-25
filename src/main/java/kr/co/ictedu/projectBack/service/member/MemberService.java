@@ -65,6 +65,12 @@ public class MemberService {
 	public int updateGrade(Map<String, Object> param) {
 	    return memberDao.updateGrade(param);
 	}
+
+
+
+	public int checkemail(String email) {
+	    return memberDao.countByEmail(email);
+	}
 }
 
 

@@ -25,5 +25,6 @@ public interface MemberDao {
 	
 	// 체크된 회원 등급 변경
 	int updateGrade(Map<String, Object> param);
+	
 }
 
