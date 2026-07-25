@@ -68,7 +68,7 @@ public class SurveyService {
 	 * @return HashMap, 기본적으로 surveyVO가 있는 Map 안에 질문이 들어있는 Map을 넣어 이중 Map 객체를 반환합니다.
 	 * */
 	public Map<String, Object> selectSurvey() {
-		SurveyVO svo = surveyDao.selectSurvey();
+		SurveyVO svo = surveyDao.selectLatestSurvey();
 		List<SurveyQuestionsVO> qlist = (ArrayList<SurveyQuestionsVO>) surveyDao.selectQuestions(svo.getSvnum());
 		
 		Map<String, Object> surveyDataMap = new HashMap<>();
@@ -83,12 +83,17 @@ public class SurveyService {
 	}
 	
 	/**
-	 * @detail 관리자가 평가 관리 화면 렌더링 시 평가 결과의 평균값을 해당 평가지의 정보와 함께 조회합니다.
-	 * @return Map<String, Object>; survey_result 테이블의 properties를 담은 list와 평가지의 정보를 담은 Map을 반환합니다.
+	 * @detail 
+	 * @return 
 	 * */
-	public Map<String, Object> getAverage() {
+	public Map<String, Object> getAvgs(int svnum) {
+		SurveyVO svo;
 		
-		SurveyVO svo = surveyDao.selectSurvey();
+		if (svnum == 0) {
+			svo = surveyDao.selectLatestSurvey();
+		}else {
+			svo = surveyDao.selectSurvey(svnum);
+		}
 		
 		Map<String, Object> params = new HashMap<>();
 		
@@ -96,7 +101,7 @@ public class SurveyService {
 		params.put("svnum", svo.getSvnum());
 		params.put("list", questionid);
 		
-		List<Map<String, Object>> resList = surveyDao.selectAverages();
+		List<Map<String, Object>> resList = surveyDao.selectAvg(svo.getSvnum());
 		
 		Map<String, Object> resMap = new HashMap<>();
 		resMap.put("svnum", svo.getSvnum());
@@ -106,6 +111,18 @@ public class SurveyService {
 		resMap.put("result", resList);
 		
 		return resMap;
+	}
+	
+	public List<Map<String, Object>> getAllSdate() { 
+		return surveyDao.selectSdate();
+	}
+	/**
+	 * @detail 
+	 * @return 
+	 * */
+	@Transactional
+	public void deleteSurvey() {
+		surveyDao.deleteSurvey();
 	}
 }
 

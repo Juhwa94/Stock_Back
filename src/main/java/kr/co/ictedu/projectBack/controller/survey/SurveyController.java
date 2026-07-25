@@ -59,13 +59,15 @@ public class SurveyController {
 		return surveyDataMap;
 	}
 	
-	/**
-	 * @return
-	 * @detail
-	 */
-	@GetMapping("/getAvg")
-	public Map<String, Object> getAverage() {
-		Map<String, Object> avgMap = service.getAverage();
+	@GetMapping("/getSdate")
+	public List<Map<String,Object>> getAllSdate() {
+		return service.getAllSdate();
+	}
+	
+	@GetMapping("/getAvgs")
+	public Map<String, Object> getAvgs(@RequestParam(name = "svnum", required = false, defaultValue = "0") int svnum) {
+		Map<String, Object> avgMap = service.getAvgs(svnum);
 		return avgMap;
 	}
+	
 }

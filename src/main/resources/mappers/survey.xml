@@ -29,7 +29,7 @@
 	</insert>
 	
 	<!--최신 평가지 출력 매퍼 쿼리문-->
-	<select id="selectSurvey" resultType="surveyvo">
+	<select id="selectLatestSurvey" resultType="surveyvo">
 		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
 		WHERE SVNUM = (SELECT MAX(SVNUM) FROM SURVEY)
 	</select>
@@ -41,28 +41,30 @@
 		ORDER BY QUESTIONS_ID
 	</select>
 	
-<<<<<<< HEAD
-	<!--평가지 별, 질문 하나 당 평균 출력 매퍼 쿼리문-->
-	<select id="selectAverages" resultType="map">
+	<!--저장된 모든 평가지의 svnum, sdate 조회 매퍼 쿼리문-->
+	<select id="selectSdate" parameterType="map">
+		SELECT svnum, TO_CHAR(SDATE, 'YYYY.MM.DD') AS sdate FROM SURVEY 
+		ORDER BY SDATE DESC
+	</select>
+	
+	<!-- -->
+	<select id="selectSurvey" parameterType="int" resultType="surveyvo">
+		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
+		WHERE SVNUM = #{SVNUM}
+	</select>
+	
+	<!--선택한 평가지 별, 질문 하나 당 평균 출력 매퍼 쿼리문 -->
+	<select id="selectAvg" parameterType="int" resultType="map">
 		SELECT questions_id, ROUND(AVG(RATING),1) AS avg FROM SURVEY_RESULT
-		WHERE RESDATE = (SELECT MAX(RESDATE) FROM SURVEY)
+		WHERE SVNUM = #{SVNUM}
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
-=======
-	<select id="selectAvarages" parameterType="int" resultType="java.util.List">
-		SELECT AVG(RATING) AS AVG FROM SURVEY
-		WHERE QUESTIONS_ID IN 
-		<foreach collection="list" item="item" open="(" separator="," close=")">
-			 #{item}
-		</foreach>
-		AND SVNUM = #{SVNUM} GROUP BY QUESTIONS_ID ORDER BY QUESTIONS_ID
->>>>>>> b5ec931f16ef6e9e5885557a1a3b73222af9ab55
 	</select>
 	
 	<!--가장 오래된 평가지 삭제 매퍼 쿼리문-->
 	<delete id="deleteSurvey">
 		DELETE FROM SURVEY
-		WHERE SVNUM = (SELECT MIN(SVNUM) FROM SURVEY) PURGE
+		WHERE SVNUM = (SELECT MIN(SVNUM) FROM SURVEY)
 	</delete>
 
 </mapper>
