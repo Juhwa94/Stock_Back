@@ -16,5 +16,6 @@ public class ProductItemVO {
 	private int piprice;		// 단가
 	private int piamount;		// 수량
 	private int pisumprice;		// 1행의 합계 가격(가격 * 수량)
-	private String pipublisher; // 출판사
+	private int piunitCost;		// 원가(도매단가)
+	private int pfnum;			// pk
 }

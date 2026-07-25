@@ -5,15 +5,11 @@
 		INSERT INTO ORDERFORM (OFNUM,ONAME,OADDR,OPHONE,OFDATE,MNUM,OIMG,OFCOMPANY)
 		VALUES (orderform_seq.NEXTVAL, #{oname}, #{oaddr}, #{ophone}, SYSDATE, #{mnum}, #{oimg}, #{ofcompany})
 	</insert>
-	<insert id="addOrderItem" parameterType="java.util.List">
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			SELECT orderform_seq.currVal FROM dual
-		</selectKey>
-		<foreach collection="list" item="item" separator=" " open="insert all"
-			close="select * from dual">
-			INTO ORDERITEM (OINUM,OINAME,OIPUBLISHER,OIPRICE,OISUMPRICE,OIAMOUNT,OFNUM)
-			VALUES (#{item.oinum}, #{item.oiname}, #{item.oipublisher}, #{item.oiprice}, #{item.oisumprice}, #{item.oiamount}, #{id})
-		</foreach>
+	<insert id="addOrderItem" parameterType="oivo"> 
+		INSERT INTO	ORDERITEM (OINUM,OINAME,OIPUBLISHER,OIPRICE,OISUMPRICE,OIAMOUNT,OFNUM) 
+		VALUES (orderitem_seq.NEXTVAL, #{oiname}, #{oipublisher}, #{oiprice}, #{oisumprice}, #{oiamount}, #{ofnum})
 	</insert>
-	
+	<select id="fkSelect" resultType="int">
+		SELECT orderform_seq.currVal FROM dual
+	</select>
 </mapper>
