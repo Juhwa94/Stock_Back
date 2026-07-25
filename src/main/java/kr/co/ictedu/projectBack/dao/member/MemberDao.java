@@ -14,9 +14,8 @@ public interface MemberDao {
 	
 	int countByEmail(String email);
 	int checkEmail(String email);
-	int countById(String id);
 	int countByNick(String nick);
-	MemberVO getMemberById(String id);
+	MemberVO getMemberByEmail(String email);
     int updateMember(MemberVO vo);
 	int deleteMember(int mnum);
 	

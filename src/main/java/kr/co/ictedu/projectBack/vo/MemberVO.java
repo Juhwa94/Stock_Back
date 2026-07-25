@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 public class MemberVO {
 	private int mnum;
-	private String id;
 	private String pwd;
 	private String name;
 	private String nick;
@@ -18,7 +17,6 @@ public class MemberVO {
 	private String verified;
 	private String mphone;
 	private String grade;
-	private String storecode;
 	private String storeaddr;
 	private String logintype;
 	private String authority;

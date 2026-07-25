@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.ictedu.projectBack.common.PagingService;
 import kr.co.ictedu.projectBack.service.member.MemberService;
@@ -42,31 +43,28 @@ public class MemberController {
 	    memberService.create(memberDTO);
 	    return ResponseEntity.ok("회원가입이 완료되었습니다.");
 	}
-
-	@GetMapping("/checkId")
-	public ResponseEntity<Integer> checkId(@RequestParam("id") String id) {
-		int count = memberService.checkId(id);
-		return ResponseEntity.ok(count); // 0이면 사용 가능, 1 이상이면 중복
-	}// http://192.168.0.19/projectBack/api/member/mypage
-
+	
 	@GetMapping("/mypage")
-	public MemberVO getMyInfo(@RequestParam("id") String id) {
-		MemberVO vo = memberService.getMemberById(id);
-		if (vo != null) {
-			vo.setPwd(null);
-		}
-		return vo;
+	public MemberVO getMyInfo(@RequestParam("email") String email) {
+	    MemberVO vo = memberService.getMemberByEmail(email);
+	    if (vo != null) {
+	        vo.setPwd(null);
+	    }
+	    return vo;
 	}
-
 	@PostMapping("/update")
 	public int updateMyInfo(@RequestBody MemberVO vo) {
 		return memberService.updateMember(vo);
 	}
 
 	@DeleteMapping("/withdraw")
-	public String memberWithdraw(@RequestParam("num") int num) {
-		memberService.withdrawMember(num);
-		return "탈퇴 완료";
+	public String memberWithdraw(
+	        @RequestParam("num") int num,
+	        HttpSession session
+	) { System.out.println("탈퇴 요청 num = " + num);
+	    memberService.withdrawMember(num);
+	    session.invalidate();
+	    return "탈퇴 완료";
 	}
 
 	// 페이징 처리 서비스 의존성 주입

@@ -19,10 +19,6 @@ public class MemberService {
     public void create(MemberVO vo) {
     	System.out.println("1");
     	
-        if (memberDao.countById(vo.getId()) > 0) {
-            throw new RuntimeException("이미 사용 중인 아이디입니다.");
-        }
-
         if (memberDao.countByEmail(vo.getEmail()) > 0) {
             throw new RuntimeException("이미 사용 중인 이메일입니다.");
         }
@@ -35,17 +31,15 @@ public class MemberService {
         System.out.println("5");
     }
 
-    public int checkId(String id) {
-        return memberDao.countById(id);
-    }
+
 
     public int checkNick(String nick) {
         return memberDao.countByNick(nick);
 	}
 
-	public MemberVO getMemberById(String id) {
-		return memberDao.getMemberById(id);
-	}
+    public MemberVO getMemberByEmail(String email) {
+        return memberDao.getMemberByEmail(email);
+    }
 
 	public int updateMember(MemberVO vo) {
 		return memberDao.updateMember(vo);
@@ -54,6 +48,7 @@ public class MemberService {
 	@Transactional
 	public boolean withdrawMember(int mnum) {
 		int result = memberDao.deleteMember(mnum);
+		System.out.println("deleteMember result = " + result);
 		return result > 0; 
     }
 	
