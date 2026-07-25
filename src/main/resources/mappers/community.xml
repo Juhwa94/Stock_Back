@@ -53,8 +53,8 @@
     WHERE cnum = #{cnum}
 </update>
 
-	<update id="hit" parameterType="int">
-		UPDATE community set hit=hit+1 WHERE cnum=#{cnum}
+	<update id="chit" parameterType="int">
+		UPDATE community set chit=chit+1 WHERE cnum=#{cnum}
 	</update>
 
 	<select id="detail" parameterType="int" resultType="comivo">

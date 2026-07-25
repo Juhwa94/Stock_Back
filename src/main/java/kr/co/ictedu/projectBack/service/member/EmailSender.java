@@ -56,7 +56,7 @@ public class EmailSender {
 		MimeMessage mmsg = emailSender.createMimeMessage();
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(mmsg, true);
-			helper.setFrom("evergraaa@naver.com");
+			helper.setFrom("jyh7827@naver.com");
 			helper.setTo(toEmail);
 			helper.setSubject("회원가입 인증번호 발송");
 			StringBuilder body = new StringBuilder();

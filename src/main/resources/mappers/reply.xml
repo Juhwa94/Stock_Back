@@ -5,8 +5,7 @@
 
 	<insert id="addComment" parameterType="reply">
 	insert into reply values(reply_seq.nextVal,
-	#{rcode},#{rwriter},
-	#{rcontent}, sysdate,2)
+	#{rcode},#{rwriter},#{rcontent},sysdate,1)
 	</insert>
 
 	<select id="listComment" resultType="reply" parameterType="int">

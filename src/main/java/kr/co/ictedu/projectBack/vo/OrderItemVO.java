@@ -11,10 +11,10 @@ import lombok.Setter;
 public class OrderItemVO {
 
 	private int oinum;
-	private String oiname;
-	private String oipublisher;
-	private int oiprice;
-	private int oisumprice;
-	private int oiamount;
+	private String oiname;		// 도서명
+	private String oipublisher; // 출판사
+	private int oiprice;		// 단가
+	private int oisumprice;		// 합계 금액
+	private int oiamount;		// 수량
 	private int ofnum;
 }

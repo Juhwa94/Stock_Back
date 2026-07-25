@@ -1,25 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.ictedu.projectBack.dao.member.MemberDao">
-
+	<!-- 회원가입 -->
 	<insert id="insertMember" parameterType="mvo">
-		INSERT INTO member(
-		mnum, id, pwd, name, nick, email, verified, mphone, grade, storecode, 
+		INSERT INTO member (
+		mnum, id, pwd, name, nick, email,
+		verified, mphone, grade, storecode,
 		storeaddr, logintype, authority, regdate
-		) VALUES
-		member_seq.nextval, 
-		#{mnum}, #{id}, #{pwd}, #{name}, #{nick}, #{email}, #{mphone}, #{storecode}, #{storeaddr}, 
-		#{logintype}, #{authority},sysdate)
+		) VALUES (
+		member_seq.NEXTVAL, #{id}, #{pwd}, #{name}, #{nick}, #{email}, 'N',
+		#{mphone}, 'REGULAR',#{storecode}, #{storeaddr},
+		'LOCAL',#{authority},SYSDATE)
 	</insert>
 
+	<!-- 이메일 중복 체크 -->
 	<select id="countByEmail" resultType="int" parameterType="string">
-		SELECT COUNT(*) FROM member WHERE email = #{email}
-	</select>
-	<select id="countById" resultType="int" parameterType="string">
-		SELECT COUNT(*) FROM member WHERE id = #{id}
+		SELECT COUNT(email) FROM member WHERE email = #{email}
 	</select>
 
-	<select id="countByNick" resultType="int" parameterType="string">
-		SELECT COUNT(*) FROM member WHERE nick = #{nick}
+	<!-- 아이디 중복 체크 -->
+	<select id="countById" resultType="int" parameterType="string">
+		SELECT COUNT(id) FROM member WHERE id = #{id}
 	</select>
+
+	<!-- 닉네임 중복 체크 -->
+	<select id="countByNick" resultType="int" parameterType="string">
+		SELECT COUNT(nick) FROM member WHERE nick = #{nick}
+	</select>
+
+	<!-- 내 정보 조회 -->
+	<select id="getMemberById" parameterType="string" resultType="mvo">
+		SELECT mnum, id, name, nick, email, mphone, grade, storecode, storeaddr,
+		authority, regdate
+		FROM member WHERE id = #{id}
+	</select>
+
+	<!--  내 정보 수정 -->
+	<update id="updateMember" parameterType="mvo">
+		UPDATE member SET nick = #{nick}, mphone = #{mphone}, storeaddr =
+		#{storeaddr}
+		WHERE id = #{id}
+	</update>
+
+	<!--  회원탈퇴 -->
+	<update id="deleteMember" parameterType="int">
+		UPDATE member SET grade = 'WITHDRAWN' WHERE mnum = #{mnum}
+	</update>
+
+	<!-- 전체 회원 조회 -->
+	<select id="memberList" parameterType="map" resultType="mvo"> SELECT mnum,
+		name, nick, email, mphone, grade, authority, storeaddr,
+		regdate row_num FROM (SELECT mnum, name, nick, email, mphone, 
+		storeaddr, grade, authority, regdate, ROW_NUMBER() OVER(ORDER BY mnum
+		desc) AS row_num FROM member <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						name like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						email like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						authority like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+		) numbered_rows WHERE row_num BETWEEN #{begin} AND #{end} </select>
+	<select id="totalCount" resultType="int" parameterType="map"> SELECT
+		COUNT(*) cnt FROM community <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						cwriter like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						ctitle like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						ccontent like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+	</select>
+
+	<!-- 체크된 회원 선택 변경 -->
+	<update id="updateGrade" parameterType="map"> UPDATE member SET grade =
+		#{grade} WHERE mnum IN <foreach collection="memberNums"
+			item="mnum"
+			open="("
+			separator=","
+			close=")">
+			#{mnum}
+		</foreach>
+	</update>
+
 </mapper>

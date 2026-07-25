@@ -14,13 +14,13 @@ import lombok.Setter;
 public class OrderFormVO {
 
 	private int ofnum;
-	private String oname;
-	private String oaddr;
-	private String ophone;
-	private int membermnum;
-	private String oimg;
-	private String ofcompany;
+	private String oname;		// 대표자 이름
+	private String oaddr;		// 주소
+	private String ophone;		// 연락처
+	private int mnum;
+	private String oimg;		// 서명 이미지
+	private String ofcompany;	// 상호명
 	// 이미지 파일 저장
 	private MultipartFile ofile;
-	private List<OrderItemVO> oList;
+	private List<OrderItemVO> orderItem;
 }
