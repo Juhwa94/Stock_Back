@@ -41,23 +41,14 @@
 		ORDER BY QUESTIONS_ID
 	</select>
 	
-<<<<<<< HEAD
 	<!--평가지 별, 질문 하나 당 평균 출력 매퍼 쿼리문-->
 	<select id="selectAverages" resultType="map">
 		SELECT questions_id, ROUND(AVG(RATING),1) AS avg FROM SURVEY_RESULT
 		WHERE RESDATE = (SELECT MAX(RESDATE) FROM SURVEY)
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
-=======
-	<select id="selectAvarages" parameterType="int" resultType="java.util.List">
-		SELECT AVG(RATING) AS AVG FROM SURVEY
-		WHERE QUESTIONS_ID IN 
-		<foreach collection="list" item="item" open="(" separator="," close=")">
-			 #{item}
-		</foreach>
-		AND SVNUM = #{SVNUM} GROUP BY QUESTIONS_ID ORDER BY QUESTIONS_ID
->>>>>>> b5ec931f16ef6e9e5885557a1a3b73222af9ab55
 	</select>
+	<!--List<Map<String, Object>> selectAverages();-->
 	
 	<!--가장 오래된 평가지 삭제 매퍼 쿼리문-->
 	<delete id="deleteSurvey">
