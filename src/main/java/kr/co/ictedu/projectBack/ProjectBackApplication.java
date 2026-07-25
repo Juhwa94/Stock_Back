@@ -21,7 +21,7 @@ public class ProjectBackApplication {
 				public void addCorsMappings(CorsRegistry registry) {
 					System.out.println("Cros Allow Origin 실행!");
 					registry.addMapping("/**")
-					.allowedOrigins("http://192.168.0.45:3000", "http://192.168.0.45:3001", "http://localhost:3000", "http://localhost:3001")
+					.allowedOrigins("http://192.168.0.19:3000", "http://192.168.0.19:3001", "http://localhost:3000", "http://localhost:3001")
 					.allowCredentials(true)
 					.allowedHeaders("*")
 					.allowedMethods("*").maxAge(3600);

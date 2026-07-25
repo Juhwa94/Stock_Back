@@ -54,8 +54,14 @@ public class MemberController {
 	}
 	@PostMapping("/update")
 	public int updateMyInfo(@RequestBody MemberVO vo) {
+
+
+	    System.out.println("받은 nick = " + vo.getNick());
+	    System.out.println("받은 email = " + vo.getEmail());
+
 		return memberService.updateMember(vo);
 	}
+
 
 	@DeleteMapping("/withdraw")
 	public String memberWithdraw(
@@ -67,11 +73,11 @@ public class MemberController {
 	    return "탈퇴 완료";
 	}
 
-	// 페이징 처리 서비스 의존성 주입
+
 	@Autowired
 	private PagingService pagingService;
 
-	// 회원 전체 조회
+	
 	@RequestMapping("/memberList")
 	public Map<String, Object> memberList(@RequestParam Map<String, String> paramMap, HttpServletRequest request) {
 
@@ -79,24 +85,24 @@ public class MemberController {
 		int totalCnt = memberService.totalCount(paramMap);
 		PageVO pageVO = pagingService.makePage(totalCnt, cPage);
 
-		// Json으로 응답 처리 - 페이징 처리된 결과 리스트와 정보
+		
 		Map<String, String> map = new HashMap<>(paramMap);
 		map.put("begin", String.valueOf(pageVO.getBeginPerPage()));
 		map.put("end", String.valueOf(pageVO.getEndPerPage()));
 		List<MemberVO> list = memberService.list(map);
 
 		Map<String, Object> response = new HashMap<>();
-		response.put("data", list); // 페이징 처리가 완료된 리스트를 저장한 데이터
-		response.put("totalItems", pageVO.getTotalRecord()); // 전체 게시물의 count
-		response.put("totalPages", pageVO.getTotalPage()); // 전체 페이지
-		response.put("currentPage", pageVO.getNowPage()); // 현재 페이지
-		response.put("startPage", pageVO.getStartPage()); // 블록의 시작
-		response.put("endPage", pageVO.getEndPage()); // 블록의 끝
+		response.put("data", list); 
+		response.put("totalItems", pageVO.getTotalRecord()); 
+		response.put("totalPages", pageVO.getTotalPage()); 
+		response.put("currentPage", pageVO.getNowPage()); 
+		response.put("startPage", pageVO.getStartPage()); 
+		response.put("endPage", pageVO.getEndPage()); 
 
 		return response;
 	}
 
-	// 선택된 회원 등급 변경
+
 	@PutMapping("/updateGrade")
 	public ResponseEntity<?> updateGrade(@RequestBody Map<String, Object> param) {
 
