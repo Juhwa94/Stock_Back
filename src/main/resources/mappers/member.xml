@@ -18,7 +18,7 @@
 
 	<!-- 이메일 중복 체크 -->
 	<select id="countByEmail" resultType="int" parameterType="string">
-		SELECT COUNT(email) FROM member WHERE email = #{email}
+		SELECT COUNT(email) FROM member WHERE email = #{email} AND NVL(grade, 'MEMBER') != 'WITHDRAWN'
 	</select>
 
 	<!-- 닉네임 중복 체크 -->
@@ -40,7 +40,7 @@
 
 	<!--  회원탈퇴 -->
 	<update id="deleteMember" parameterType="int">
-		UPDATE member SET grade = 'WITHDRAWN' WHERE mnum = #{mnum}
+		UPDATE member SET status = 'WITHDRAWN' WHERE mnum = #{mnum}
 	</update>
 
 	<!-- 전체 회원 조회 -->
