@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 
 public class NoticeVO {
+	
 	private int nnum;
 	private int nhit;
 	private String ntitle;

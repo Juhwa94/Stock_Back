@@ -42,6 +42,9 @@ public class CommunityService {
 		hit(num);
 		return communityDao.detail(num);
 	}
+	public CommunityVO get(int num) {
+		return communityDao.detail(num);
+	}
 
 
 	public void del(int num) {

@@ -34,16 +34,16 @@ public class CommunityController {
 	private CommunityService comm;
 	
 //	댓글자리
-	@PostMapping("commAdd")
+//	@PostMapping("commAdd")
 	//json으로 받겠
-	public ResponseEntity<?> comm(CommunityVO vo) {
-	comm.add(vo);
+//	public ResponseEntity<?> comm(CommunityVO vo) {
+//	comm.add(vo);
 //		System.out.println("vo:"+vo.getUcode());
 //		System.out.println("vo:"+vo.getCwirter());
 //	    System.out.println("vo:"+vo.getCcontent());
 //		System.out.println("vo:"+vo.getCregdate());
-		return ResponseEntity.ok("등록 성공");
-	}
+//		return ResponseEntity.ok("등록 성공");
+//	}
 
 	@Autowired
 	private PagingService pagingService;
@@ -94,7 +94,7 @@ public class CommunityController {
 	return ResponseEntity.ok().body("게시글 등록 성공!");
 	}
 	
-	@RequestMapping("/upCommunityList")
+	@RequestMapping("/communityList")
 	public Map<String, Object> upCommunityList(
 			@RequestParam Map<String, String> paramMap, 
 			HttpServletRequest request
@@ -156,17 +156,49 @@ public class CommunityController {
 //	}
 	@PostMapping("update")
 	public ResponseEntity<?> update(CommunityVO vo){
+		
+		MultipartFile mf = vo.getMfile();
+		
+		if(mf != null && !mf.isEmpty()) {
+			String oriFn = mf.getOriginalFilename();
+			File file = new File(filePath, oriFn);
+			
+			try {
+				mf.transferTo(file);
+				vo.setCimgn(oriFn);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 수정 실패");
+				
+			}
+		}
+		
+		
+		
+		
+		
 		comm.update(vo);
 		return ResponseEntity.ok("수정 완료");
 	}
 	
 	
 	@DeleteMapping("/delete")
-	public String communityDelete(@RequestParam("num") int num) {
-		CommunityVO vo = comm.detail(num);
-			File file = 
-					new File(filePath, vo.getCimgn());
-		return "삭제 완료";
+	public ResponseEntity<?> communityDelete(@RequestParam("num") int num) {
+		
+		CommunityVO vo = comm.get(num);
+		
+		if(vo.getCimgn() != null) {
+			File file = new File(filePath, vo.getCimgn());
+			
+			if (file.exists()) {
+				file.delete();
+			}
+		}
+		comm.del(num);
+		
+		
+		
+		return ResponseEntity.ok("삭제 완료");
 	}
 	
 }

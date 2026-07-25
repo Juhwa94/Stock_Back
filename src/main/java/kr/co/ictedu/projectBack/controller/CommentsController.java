@@ -34,12 +34,11 @@ public class CommentsController {
 	private CommentsService commentsService;
 	
 //	댓글자리
-	@Autowired
-	private CommentsService coms;
+	
 	@PostMapping("comsAdd")
 	//json으로 받겠
-	public ResponseEntity<?> coms(@RequestBody CommentsVO vo) {
-	coms.add(vo);
+	public ResponseEntity<?> commentsService(@RequestBody CommentsVO vo) {
+		commentsService.add(vo);
 //		System.out.println("vo:"+vo.getUcode());
 		System.out.println("vo:"+vo.getCwirter());
 	    System.out.println("vo:"+vo.getCcontent());
