@@ -40,7 +40,7 @@
 
 	<!--  회원탈퇴 -->
 	<update id="deleteMember" parameterType="int">
-		UPDATE member SET status = 'WITHDRAWN' WHERE mnum = #{mnum}
+		UPDATE member SET grade = 'WITHDRAWN' WHERE mnum = #{mnum}
 	</update>
 
 	<!-- 전체 회원 조회 -->
