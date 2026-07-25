@@ -44,6 +44,11 @@ public class MemberController {
 	    return ResponseEntity.ok("회원가입이 완료되었습니다.");
 	}
 	
+	@GetMapping("/emailCheck")
+	public int emailCheck(@RequestParam("email") String email) {
+	    System.out.println("이메일 중복 확인 : " + email);
+	    return memberService.checkemail(email);
+	}
 	@GetMapping("/mypage")
 	public MemberVO getMyInfo(@RequestParam("email") String email) {
 	    MemberVO vo = memberService.getMemberByEmail(email);
