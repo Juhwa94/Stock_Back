@@ -116,13 +116,9 @@ public class SurveyService {
 	public List<Map<String, Object>> getAllSdate() { 
 		return surveyDao.selectSdate();
 	}
-	/**
-	 * @detail 
-	 * @return 
-	 * */
-	@Transactional
-	public void deleteSurvey() {
-		surveyDao.deleteSurvey();
+
+	public List<Map<String, Object>> getAllRequest() {
+		return surveyDao.selectAllRequest();
 	}
 }
 

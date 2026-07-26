@@ -29,5 +29,7 @@ public interface SurveyDao {
 	 List<Map<String, Object>> selectAvg(int svnum);
 	 
 	 List<Map<String, Object>> selectSdate();
+
+	 List<Map<String, Object>> selectAllRequest();
 	 
 }

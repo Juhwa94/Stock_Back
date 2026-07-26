@@ -27,7 +27,7 @@
 		</foreach>
 		SELECT 1 FROM DUAL
 	</insert>
-	
+
 	<!--최신 평가지 출력 매퍼 쿼리문-->
 	<select id="selectLatestSurvey" resultType="surveyvo">
 		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
@@ -46,6 +46,11 @@
 		WHERE SVNUM = #{SVNUM}
 		ORDER BY QUESTIONS_ID
 	</select>
+
+	<!--모든 추가 요청 사항 출력 매퍼 쿼리문-->
+	<select id="selectAllRequest" resultType="map">
+		SELECT DISTINCT request, TO_CHAR(resdate, 'YYYY.MM.DD') AS resdate FROM SURVEY_RESULT
+	</select>
 	
 	<!--저장된 모든 평가지의 svnum, sdate 조회 매퍼 쿼리문-->
 	<select id="selectSdate" parameterType="map">
@@ -60,12 +65,4 @@
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
 	</select>
-	<!--List<Map<String, Object>> selectAverages();-->
-	
-	<!--가장 오래된 평가지 삭제 매퍼 쿼리문-->
-	<delete id="deleteSurvey">
-		DELETE FROM SURVEY
-		WHERE SVNUM = (SELECT MIN(SVNUM) FROM SURVEY)
-	</delete>
-
 </mapper>
