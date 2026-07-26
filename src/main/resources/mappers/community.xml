@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- 여기서 namespace는 @Mapper를 지정한 Interface인 즉 패키지포함해서 MemoDao를 작성해야 함. -->
 <mapper namespace="kr.co.ictedu.projectBack.dao.CommunityDao">
-	<insert id="add" parameterType="comvo">
+	<insert id="add" parameterType="comivo">
 		INSERT INTO community values(community_seq.NEXTVAL,
-		#{title}, #{writer}, #{content}, #{imgn}, 0, #{reip}, SYSDATE)
+		#{ctitle}, #{cwriter}, #{ccontent}, #{cimgn}, #{membernum}, 0, SYSDATE)
 	</insert>
-	<select id="list" parameterType="map" resultType="comvo"> SELECT num, title,
-		writer, CONTENT, hit, reip, cdate, imgn, row_num FROM (SELECT num,
-		title, writer, CONTENT, hit, reip, cdate, imgn, ROW_NUMBER() OVER(ORDER
-		BY num desc) AS row_num FROM community <if
+	<select id="list" parameterType="map" resultType="comivo"> SELECT cnum, ctitle,
+		cwriter, CCONTENT, chit, cdate, cimgn, row_num FROM (SELECT cnum,
+		ctitle, cwriter, CCONTENT, chit, cdate, cimgn, ROW_NUMBER() OVER(ORDER
+		BY cnum desc) AS row_num FROM community <if
 			test="searchType != null and searchValue != null">
 			<where>
 				<choose>
 					<when test="searchType == 1">
-						writer like '%' || #{searchValue} || '%'
+						cwriter like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 2">
-						title like '%' || #{searchValue} || '%'
+						ctitle like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 3">
-						content like '%' || #{searchValue} || '%'
+						ccontent like '%' || #{searchValue} || '%'
 					</when>
 				</choose>
 			</where>
@@ -33,29 +32,37 @@
 			<where>
 				<choose>
 					<when test="searchType == 1">
-						writer like '%' || #{searchValue} || '%'
+						cwriter like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 2">
-						title like '%' || #{searchValue} || '%'
+						ctitle like '%' || #{searchValue} || '%'
 					</when>
 					<when test="searchType == 3">
-						content like '%' || #{searchValue} || '%'
+						ccontent like '%' || #{searchValue} || '%'
 					</when>
 				</choose>
 			</where>
 		</if>
 	</select>
+	<update id="update" parameterType="comivo">
+    UPDATE community
+    SET
+        ctitle = #{ctitle},
+        ccontent = #{ccontent},
+        cimgn = #{cimgn}
+    WHERE cnum = #{cnum}
+</update>
 
-	<update id="hit" parameterType="int">
-		UPDATE community set hit=hit+1 WHERE num=#{num}
+	<update id="chit" parameterType="int">
+		UPDATE community set chit=chit+1 WHERE cnum=#{cnum}
 	</update>
 
-	<select id="detail" parameterType="int" resultType="comvo">
-		SELECT num, title, writer, CONTENT, hit, reip, cdate, imgn FROM community
-		WHERE num=#{num}
+	<select id="detail" parameterType="int" resultType="comivo">
+		SELECT cnum, ctitle, cwriter, CCONTENT, chit, cdate, cimgn FROM community
+		WHERE cnum=#{cnum}
 	</select>
 
 	<delete id="del" parameterType="int">
-		DELETE FROM community WHERE num=#{num}
+		DELETE FROM community WHERE cnum=#{cnum}
 	</delete>
 </mapper>

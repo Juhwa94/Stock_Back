@@ -9,6 +9,8 @@ public class PagingService {
 
 	public kr.co.ictedu.projectBack.vo.PageVO makePage(int totalCnt, String cPage) {
 
+		// 여기는 PagingService
+		
 		PageVO pageVO = new PageVO();
 
 		pageVO.setTotalRecord(totalCnt);

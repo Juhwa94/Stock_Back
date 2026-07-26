@@ -20,6 +20,10 @@ public class CommunityService {
 		communityDao.add(vo);
 		
 	}
+	
+	public void update(CommunityVO vo) {
+		communityDao.update(vo);
+	}
 
 	public List<CommunityVO> list(Map<String, String> map) {
 		return communityDao.list(map);
@@ -36,6 +40,9 @@ public class CommunityService {
 	// 상세보기 하기 전에 한번 조회수를 증가 시키기
 	public CommunityVO detail(int num) {
 		hit(num);
+		return communityDao.detail(num);
+	}
+	public CommunityVO get(int num) {
 		return communityDao.detail(num);
 	}
 

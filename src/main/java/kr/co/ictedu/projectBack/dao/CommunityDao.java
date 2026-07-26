@@ -16,4 +16,5 @@ public interface CommunityDao {
 	void hit(int num);
 	CommunityVO detail(int num);
 	void del(int num);
+	void update(CommunityVO vo);
 }

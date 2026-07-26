@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.ictedu.projectBack.dao.InquiryDao">
+
+	<insert id="add" parameterType="invo">
+		insert into inquiry values(inquiry_seq.nextVal,#{ititle},
+		#{iwriter},#{icontent},sysdate,#{membernum},#{imgn})
+	</insert>
+
+    <select id="list" resultType="invo" parameterType="map">
+		SELECT inum,ititle,iwriter,icontent,bdate,imgn,row_num
+		FROM (
+		
+		SELECT inum,ititle,iwriter,icontent,idate,imgn,
+		ROW_NUMBER() OVER(ORDER BY inum desc) AS row_num FROM inquiry
+		
+		<if test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						iwriter like '%'|| #{searchValue} ||'%'
+					</when>
+					<when test="searchType == 2">
+						ititle like '%'|| #{searchValue} ||'%'
+					</when>
+					<when test="searchType == 3">
+						icontent like '%'|| #{searchValue} ||'%'
+					</when>
+				</choose>
+			</where>
+		</if>
+		) numbered_rows WHERE row_num BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<select id="totalCount" resultType="int" parameterType="map">
+			select count(*) cnt from inquiry
+		<if test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						iwriter like '%'|| #{searchValue} ||'%'
+					</when>
+					<when test="searchType == 2">
+						ititle like '%'|| #{searchValue} ||'%'
+					</when>
+					<when test="searchType == 3">
+						icontent like '%'|| #{searchValue} ||'%'
+					</when>
+				</choose>
+			</where>
+		</if>
+	</select>
+	
+	<select id="detail" parameterType="int" resultType="invo">
+		select * from inquiry where inum=#{inum}
+	</select>
+	<delete id="delete" parameterType="int">
+		delete from inquiry where inum=#{inum}
+	</delete>
+
+
+</mapper>  

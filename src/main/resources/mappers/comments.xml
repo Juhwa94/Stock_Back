@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.ictedu.projectBack.dao.CommentsDao">
+	<insert id="add" parameterType="tomivo">
+		INSERT INTO comments values(comments_seq.NEXTVAL,
+		 #{cwriter}, #{ccontent},#{communitynum}, SYSDATE)
+	</insert>
+	<select id="list" parameterType="map" resultType="tomivo"> SELECT cnum,
+		cwriter, CCONTENT,  cdate row_num FROM (SELECT cnum,
+		cwriter, CCONTENT,  cdate ROW_NUMBER() OVER(ORDER
+		BY num desc) AS row_num FROM comments <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						writer like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						title like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						content like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+		) numbered_rows WHERE row_num BETWEEN #{begin} AND #{end} </select>
+	<select id="totalCount" resultType="int" parameterType="map"> SELECT
+		COUNT(*) cnt FROM comments <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						writer like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						title like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						content like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+	</select>
+
+	<update id="hit" parameterType="int">
+		UPDATE comments set hit=hit+1 WHERE num=#{num}
+	</update>
+
+	<select id="detail" parameterType="int" resultType="tomivo">
+		SELECT cnum, cwriter, CCONTENT, cdate FROM comments
+		WHERE num=#{num}
+	</select>
+
+	<delete id="del" parameterType="int">
+		DELETE FROM comments WHERE num=#{num}
+	</delete>
+</mapper>

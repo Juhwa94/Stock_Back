@@ -6,17 +6,16 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.Getter;
 import lombok.Setter;
 
-@Alias("comvo")
+@Alias("comivo")
 @Getter
 @Setter
 public class CommunityVO {
-	private int num;
-	private String title;
-	private String writer;
-	private String content;
-	private String imgn;
-	private int hit;
-	private String reip;
+	private int cnum;
+	private int chit;
+	private String ctitle;
+	private String cwriter;
+	private String ccontent;
+	private String cimgn;	
 	private String cdate;
 	// 이미지 저장용
 	private MultipartFile mfile;

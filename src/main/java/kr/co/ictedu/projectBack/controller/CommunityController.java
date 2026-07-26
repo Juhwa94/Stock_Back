@@ -1,4 +1,4 @@
-package kr.co.ictedu.projectBack.contoller;
+package kr.co.ictedu.projectBack.controller;
 
 import java.io.File;
 import java.util.HashMap;
@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.ictedu.projectBack.common.PagingService;
+import kr.co.ictedu.projectBack.service.CommentsService;
 import kr.co.ictedu.projectBack.service.CommunityService;
+import kr.co.ictedu.projectBack.vo.CommentsVO;
 import kr.co.ictedu.projectBack.vo.CommunityVO;
 import kr.co.ictedu.projectBack.vo.PageVO;
 
@@ -29,10 +31,19 @@ import kr.co.ictedu.projectBack.vo.PageVO;
 public class CommunityController {
 	
 	@Autowired
-	private CommunityService communityService;
+	private CommunityService comm;
 	
 //	댓글자리
-	
+//	@PostMapping("commAdd")
+	//json으로 받겠
+//	public ResponseEntity<?> comm(CommunityVO vo) {
+//	comm.add(vo);
+//		System.out.println("vo:"+vo.getUcode());
+//		System.out.println("vo:"+vo.getCwirter());
+//	    System.out.println("vo:"+vo.getCcontent());
+//		System.out.println("vo:"+vo.getCregdate());
+//		return ResponseEntity.ok("등록 성공");
+//	}
 
 	@Autowired
 	private PagingService pagingService;
@@ -50,42 +61,40 @@ public class CommunityController {
 	@PostMapping("/communityAdd")
 	public ResponseEntity<?> communityAdd(CommunityVO vo, HttpServletRequest request) {
 		
-		// VO에 클라이언트의 아이피를 저장
-		vo.setReip(request.getRemoteAddr());
-		System.out.println("writer : " + vo.getWriter());
-		System.out.println("title : " + vo.getTitle());
-		System.out.println("content : " + vo.getContent());
-		System.out.println("Reip : " + request.getRemoteAddr());
-		System.out.println("========================");
-		
 		
 		MultipartFile mf = vo.getMfile();
+		
+	
+	    if(mf != null && !mf.isEmpty()) {
+	    	
 		String oriFn = mf.getOriginalFilename();
 		System.out.println("파일 이름 : " + oriFn);
 		// ------------------------------------------
 		StringBuilder path = new StringBuilder();
 		path.append(filePath).append("\\");
 		path.append(oriFn);
+		
 		System.out.println("FullPath : " + path);
 		// ------------------------------------------
 		File f = new File(path.toString());
-		// f에 저장된 파일객체를 사용해서 파일의 내용을 읽어와서 한 바이트씩 f에서 잡은 경로로 작성
-		// 개념 InputStream read() -> while -> BufferedOutputStream write(f)
-		// transferTo() : MultpartFile 를 사용해서 파일을 복제한다.
+	
 		try {
-			mf.transferTo(f); // imgfile
-			// 업로드 된 파일의 이름을 vo에 저장한다
-			vo.setImgn(oriFn);
-			// Service를 통해서 Mapper로 vo 주소 값을 보낸다
-			communityService.add(vo);
+			mf.transferTo(f); 
+			vo.setCimgn(oriFn);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패");
 		} 
-		return ResponseEntity.ok().body("업보드 업로드 성공!");
+	
+	}
+	    comm.add(vo);
+		
+	return ResponseEntity.ok().body("게시글 등록 성공!");
 	}
 	
-	
-	@RequestMapping("/upCommunityList")
+	@RequestMapping("/communityList")
 	public Map<String, Object> upCommunityList(
 			@RequestParam Map<String, String> paramMap, 
 			HttpServletRequest request
@@ -97,14 +106,14 @@ public class CommunityController {
 		System.out.println("searchType : " + paramMap.get("searchType"));
 		System.out.println("searchValue : " + paramMap.get("searchValue"));
 		System.out.println("*************************");
-		int totalCnt = communityService.totalCount(paramMap);
+		int totalCnt = comm.totalCount(paramMap);
 		PageVO pageVO = pagingService.makePage(totalCnt, cPage);
 		
 		// Json으로 응답 처리 - 페이징 처리된 결과 리스트와 정보
 		Map<String, String> map = new HashMap<>(paramMap);
 		map.put("begin", String.valueOf(pageVO.getBeginPerPage()));
 		map.put("end", String.valueOf(pageVO.getEndPerPage()));
-		List<CommunityVO> list = communityService.list(map);
+		List<CommunityVO> list = comm.list(map);
 		
 
 		
@@ -122,7 +131,7 @@ public class CommunityController {
 	
 	@GetMapping("/detail")
 	public CommunityVO communityDetail(@RequestParam("num") int num) {
-		return communityService.detail(num);
+		return comm.detail(num);
 	}
 	
 //	// @RequestBody - Json으로 입력받아서 vo에 저장
@@ -145,13 +154,51 @@ public class CommunityController {
 //		
 //		return upBoardCommService.listComment(num);
 //	}
-	
+	@PostMapping("update")
+	public ResponseEntity<?> update(CommunityVO vo){
+		
+		MultipartFile mf = vo.getMfile();
+		
+		if(mf != null && !mf.isEmpty()) {
+			String oriFn = mf.getOriginalFilename();
+			File file = new File(filePath, oriFn);
+			
+			try {
+				mf.transferTo(file);
+				vo.setCimgn(oriFn);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 수정 실패");
+				
+			}
+		}
+		
+		
+		
+		
+		
+		comm.update(vo);
+		return ResponseEntity.ok("수정 완료");
+	}
 	
 	
 	@DeleteMapping("/delete")
-	public String communityDelete(@RequestParam("num") int num) {
-		communityService.del(num);
-		return "삭제 완료";
+	public ResponseEntity<?> communityDelete(@RequestParam("num") int num) {
+		
+		CommunityVO vo = comm.get(num);
+		
+		if(vo.getCimgn() != null) {
+			File file = new File(filePath, vo.getCimgn());
+			
+			if (file.exists()) {
+				file.delete();
+			}
+		}
+		comm.del(num);
+		
+		
+		
+		return ResponseEntity.ok("삭제 완료");
 	}
 	
 }
