@@ -27,15 +27,6 @@ public class MailCertiController {
 	@Autowired
     private MemberService memberService;
 	//emailCheck->idCheck
-	//아이디 중복확인
-	@PostMapping("/idCheck")
-	public int checkId(@RequestBody Map<String, String> request) {
-	    String id = request.get("id");
-	    System.out.println("아이디 중복확인 요청: " + id);
-
-	    int checkId = memberService.checkId(id);
-	    return (checkId == 0) ? 0 : 1; 
-	}
 	// 닉네임 중복확인
 	@PostMapping("/nickCheck")
 	public int checkNick(@RequestBody Map<String, String> request) {

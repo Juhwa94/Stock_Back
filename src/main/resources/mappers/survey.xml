@@ -60,6 +60,7 @@
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
 	</select>
+	<!--List<Map<String, Object>> selectAverages();-->
 	
 	<!--가장 오래된 평가지 삭제 매퍼 쿼리문-->
 	<delete id="deleteSurvey">

@@ -4,11 +4,11 @@
 <mapper namespace="kr.co.ictedu.projectBack.dao.CommunityDao">
 	<insert id="add" parameterType="comivo">
 		INSERT INTO community values(community_seq.NEXTVAL,
-		#{ctitle}, #{cwriter}, #{ccontent}, #{cimgn}, #{membernum}, 0, SYSDATE)
+		#{ctitle}, #{cwriter}, #{ccontent}, #{cimgn}, 0, SYSDATE, #{membernum})
 	</insert>
 	<select id="list" parameterType="map" resultType="comivo"> SELECT cnum, ctitle,
-		cwriter, CCONTENT, chit, cdate, cimgn, row_num FROM (SELECT cnum,
-		ctitle, cwriter, CCONTENT, chit, cdate, cimgn, ROW_NUMBER() OVER(ORDER
+		cwriter, CCONTENT, chit, cdate, cimgn, membernum, row_num FROM (SELECT cnum,
+		ctitle, cwriter, CCONTENT, chit, cdate, cimgn, membernum, ROW_NUMBER() OVER(ORDER
 		BY cnum desc) AS row_num FROM community <if
 			test="searchType != null and searchValue != null">
 			<where>
@@ -58,7 +58,7 @@
 	</update>
 
 	<select id="detail" parameterType="int" resultType="comivo">
-		SELECT cnum, ctitle, cwriter, CCONTENT, chit, cdate, cimgn FROM community
+		SELECT cnum, ctitle, cwriter, CCONTENT, chit, cdate, cimgn, membernum FROM community
 		WHERE cnum=#{cnum}
 	</select>
 

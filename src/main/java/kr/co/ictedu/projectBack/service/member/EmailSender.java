@@ -3,6 +3,7 @@ package kr.co.ictedu.projectBack.service.member;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
@@ -24,6 +25,9 @@ public class EmailSender {
 	private CertiNumRedisDao certiNumRedisDao;
 	
 	private String authCode;
+	
+	@Value("${mail.from.address}")
+    private String mailFrom;
 	
 	public int duplicateEmail (String email) {
 		int checkEmail = memberDao.countByEmail(email);
@@ -56,7 +60,7 @@ public class EmailSender {
 		MimeMessage mmsg = emailSender.createMimeMessage();
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(mmsg, true);
-			helper.setFrom("jyh7827@naver.com");
+			helper.setFrom(mailFrom);
 			helper.setTo(toEmail);
 			helper.setSubject("회원가입 인증번호 발송");
 			StringBuilder body = new StringBuilder();

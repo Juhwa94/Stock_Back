@@ -14,6 +14,7 @@ public class NoticeVO {
 	
 	private int nnum;
 	private int nhit;
+	private int membernum;
 	private String ntitle;
 	private String nwriter;
 	private String ncontent;

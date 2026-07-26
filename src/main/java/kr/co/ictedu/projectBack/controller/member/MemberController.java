@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.ictedu.projectBack.common.PagingService;
 import kr.co.ictedu.projectBack.service.member.MemberService;
@@ -42,38 +43,46 @@ public class MemberController {
 	    memberService.create(memberDTO);
 	    return ResponseEntity.ok("회원가입이 완료되었습니다.");
 	}
-
-	@GetMapping("/checkId")
-	public ResponseEntity<Integer> checkId(@RequestParam("id") String id) {
-		int count = memberService.checkId(id);
-		return ResponseEntity.ok(count); // 0이면 사용 가능, 1 이상이면 중복
-	}// http://192.168.0.19/projectBack/api/member/mypage
-
-	@GetMapping("/mypage")
-	public MemberVO getMyInfo(@RequestParam("id") String id) {
-		MemberVO vo = memberService.getMemberById(id);
-		if (vo != null) {
-			vo.setPwd(null);
-		}
-		return vo;
+	
+	@GetMapping("/emailCheck")
+	public int emailCheck(@RequestParam("email") String email) {
+	    System.out.println("이메일 중복 확인 : " + email);
+	    return memberService.checkemail(email);
 	}
-
+	@GetMapping("/mypage")
+	public MemberVO getMyInfo(@RequestParam("email") String email) {
+	    MemberVO vo = memberService.getMemberByEmail(email);
+	    if (vo != null) {
+	        vo.setPwd(null);
+	    }
+	    return vo;
+	}
 	@PostMapping("/update")
 	public int updateMyInfo(@RequestBody MemberVO vo) {
+
+
+	    System.out.println("받은 nick = " + vo.getNick());
+	    System.out.println("받은 email = " + vo.getEmail());
+
 		return memberService.updateMember(vo);
 	}
 
+
 	@DeleteMapping("/withdraw")
-	public String memberWithdraw(@RequestParam("num") int num) {
-		memberService.withdrawMember(num);
-		return "탈퇴 완료";
+	public String memberWithdraw(
+	        @RequestParam("num") int num,
+	        HttpSession session
+	) { System.out.println("탈퇴 요청 num = " + num);
+	    memberService.withdrawMember(num);
+	    session.invalidate();
+	    return "탈퇴 완료";
 	}
 
-	// 페이징 처리 서비스 의존성 주입
+
 	@Autowired
 	private PagingService pagingService;
 
-	// 회원 전체 조회
+	
 	@RequestMapping("/memberList")
 	public Map<String, Object> memberList(@RequestParam Map<String, String> paramMap, HttpServletRequest request) {
 
@@ -81,24 +90,24 @@ public class MemberController {
 		int totalCnt = memberService.totalCount(paramMap);
 		PageVO pageVO = pagingService.makePage(totalCnt, cPage);
 
-		// Json으로 응답 처리 - 페이징 처리된 결과 리스트와 정보
+		
 		Map<String, String> map = new HashMap<>(paramMap);
 		map.put("begin", String.valueOf(pageVO.getBeginPerPage()));
 		map.put("end", String.valueOf(pageVO.getEndPerPage()));
 		List<MemberVO> list = memberService.list(map);
 
 		Map<String, Object> response = new HashMap<>();
-		response.put("data", list); // 페이징 처리가 완료된 리스트를 저장한 데이터
-		response.put("totalItems", pageVO.getTotalRecord()); // 전체 게시물의 count
-		response.put("totalPages", pageVO.getTotalPage()); // 전체 페이지
-		response.put("currentPage", pageVO.getNowPage()); // 현재 페이지
-		response.put("startPage", pageVO.getStartPage()); // 블록의 시작
-		response.put("endPage", pageVO.getEndPage()); // 블록의 끝
+		response.put("data", list); 
+		response.put("totalItems", pageVO.getTotalRecord()); 
+		response.put("totalPages", pageVO.getTotalPage()); 
+		response.put("currentPage", pageVO.getNowPage()); 
+		response.put("startPage", pageVO.getStartPage()); 
+		response.put("endPage", pageVO.getEndPage()); 
 
 		return response;
 	}
 
-	// 선택된 회원 등급 변경
+
 	@PutMapping("/updateGrade")
 	public ResponseEntity<?> updateGrade(@RequestBody Map<String, Object> param) {
 

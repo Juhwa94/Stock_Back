@@ -14,9 +14,8 @@ public interface MemberDao {
 	
 	int countByEmail(String email);
 	int checkEmail(String email);
-	int countById(String id);
 	int countByNick(String nick);
-	MemberVO getMemberById(String id);
+	MemberVO getMemberByEmail(String email);
     int updateMember(MemberVO vo);
 	int deleteMember(int mnum);
 	
@@ -26,5 +25,6 @@ public interface MemberDao {
 	
 	// 체크된 회원 등급 변경
 	int updateGrade(Map<String, Object> param);
+	
 }
 

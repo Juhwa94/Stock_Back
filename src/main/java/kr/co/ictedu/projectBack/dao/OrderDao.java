@@ -12,6 +12,7 @@ import kr.co.ictedu.projectBack.vo.OrderItemVO;
 public interface OrderDao {
 
 	void addOrderForm(OrderFormVO ofvo);
-	void addOrderItem(List<OrderItemVO> olist);
+	void addOrderItem(OrderItemVO oivo);
+	int fkSelect();
 
 }

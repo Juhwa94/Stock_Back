@@ -34,16 +34,16 @@ public class LoginController {
 		    System.out.println("세션 처리 완료!");
 		    MemberVO loginMember = new MemberVO();
 		    loginMember.setMnum(((Number)result.get("MNUM")).intValue());
-		    loginMember.setId(result.get("ID").toString());
 		    loginMember.setName(result.get("NAME").toString());
 		    loginMember.setEmail(result.get("EMAIL").toString());
 		    loginMember.setNick(result.get("NICK").toString());
 		    loginMember.setMphone(result.get("MPHONE").toString());
 		    loginMember.setGrade(result.get("GRADE").toString());
-		    loginMember.setStorecode(result.get("STORECODE").toString());
 		    loginMember.setStoreaddr(result.get("STOREADDR").toString());
 		    loginMember.setAuthority(result.get("AUTHORITY").toString());
+		    
 		    session.setAttribute("loginMember", loginMember);
+		    
 		    return "success";
 		}
 		return "fail";
