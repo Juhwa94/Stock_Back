@@ -50,6 +50,7 @@
 	<!--모든 추가 요청 사항 출력 매퍼 쿼리문-->
 	<select id="selectAllRequest" resultType="map">
 		SELECT DISTINCT request, TO_CHAR(resdate, 'YYYY.MM.DD') AS resdate FROM SURVEY_RESULT
+		WHERE REQUEST IS NOT NULL
 	</select>
 	
 	<!--저장된 모든 평가지의 svnum, sdate 조회 매퍼 쿼리문-->

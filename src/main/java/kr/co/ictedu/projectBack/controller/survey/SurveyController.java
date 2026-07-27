@@ -70,9 +70,9 @@ public class SurveyController {
 		return avgMap;
 	}
 
-	@GetMapping("/getAvgs")
+	@GetMapping("/getRequest")
 	public List<Map<String, Object>> getAllRequest() {
-		List<Map<String, Object>> reqMap = service.selectAllRequest();
+		List<Map<String, Object>> reqMap = service.getAllRequest();
 		return reqMap;
 	}
 }
