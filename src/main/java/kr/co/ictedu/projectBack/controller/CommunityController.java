@@ -104,7 +104,9 @@ public class CommunityController {
 		map.put("begin", String.valueOf(pageVO.getBeginPerPage()));
 		map.put("end", String.valueOf(pageVO.getEndPerPage()));
 		List<CommunityVO> list = comm.list(map);
-
+		
+		
+		
 		Map<String, Object> response = new HashMap<>();
 		response.put("data", list); // 페이징 처리가 완료된 리스트를 저장한 데이터
 		response.put("totalItems", pageVO.getTotalRecord()); // 전체 게시물의 count
