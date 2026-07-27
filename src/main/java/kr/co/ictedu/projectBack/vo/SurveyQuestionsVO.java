@@ -10,6 +10,8 @@ import lombok.Setter;
 @Alias("sqvo")
 public class SurveyQuestionsVO {
 	
+	private SurveyVO survey;
+	
 	private Integer svnum;
 	private Integer questions_id;
 	private String questions_text;

@@ -1,5 +1,6 @@
 package kr.co.ictedu.projectBack;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class ProjectBackApplication {
+	
+	@Value("${cors.allowed-origins}")
+    private String[] allowedOrigins;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectBackApplication.class, args);
@@ -21,7 +25,7 @@ public class ProjectBackApplication {
 				public void addCorsMappings(CorsRegistry registry) {
 					System.out.println("Cros Allow Origin 실행!");
 					registry.addMapping("/**")
-					.allowedOrigins("http://192.168.0.42:3000", "http://192.168.0.42:3001", "http://localhost:3000", "http://localhost:3001")
+					.allowedOrigins(allowedOrigins)
 					.allowCredentials(true)
 					.allowedHeaders("*")
 					.allowedMethods("*").maxAge(3600);

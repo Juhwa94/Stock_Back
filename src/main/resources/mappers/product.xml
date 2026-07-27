@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.ictedu.projectBack.dao.ProductDao">
+	<insert id="addProductForm" parameterType="pfvo">
+		INSERT INTO PRODUCTFORM (PSTARTDATE,PENDDATE,PFNUM)
+		VALUES (#{pstartdate}, #{penddate}, productForm_seq.NEXTVAL)
+	</insert>
+	<insert id="addProductItem" parameterType="pivo">
+		INSERT INTO	PRODUCTITEM (PINUM,PINAME,PIISBN,PIPRICE,PIAMOUNT,PISUMPRICE,PIUNITCOST,PFNUM) 
+		VALUES (productItem_seq.NEXTVAL, #{piname}, #{piisbn}, #{piprice}, 
+		#{piamount}, #{pisumprice}, #{piunitCost}, #{pfnum})	
+	</insert>
+	<select id="fkSelect1" resultType="int">
+		SELECT productForm_seq.currVal FROM dual
+	</select>
+</mapper>

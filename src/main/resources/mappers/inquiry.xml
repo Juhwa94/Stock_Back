@@ -8,7 +8,7 @@
 	</insert>
 
     <select id="list" resultType="invo" parameterType="map">
-		SELECT inum,ititle,iwriter,icontent,bdate,imgn,row_num
+		SELECT inum,ititle,iwriter,icontent,idate,imgn,row_num
 		FROM (
 		
 		SELECT inum,ititle,iwriter,icontent,idate,imgn,
@@ -54,6 +54,7 @@
 	<select id="detail" parameterType="int" resultType="invo">
 		select * from inquiry where inum=#{inum}
 	</select>
+	
 	<delete id="delete" parameterType="int">
 		delete from inquiry where inum=#{inum}
 	</delete>

@@ -11,10 +11,8 @@ import kr.co.ictedu.projectBack.vo.MemberVO;
 
 @Mapper
 public interface LoginDao {
-	@Select("SELECT MNUM, NAME, COUNT(*) cnt FROM MEMBER WHERE \r\n "
-			+ "email=#{email} and pwd=#{pwd} group by MNUM, name")
+	@Select("SELECT MNUM, NAME, NICK, EMAIL, VERIFIED, MPHONE, "
+			+ "GRADE, STOREADDR, LOGINTYPE, AUTHORITY, REGDATE "
+			+ "FROM MEMBER WHERE EMAIL=#{email} AND PWD=#{pwd} AND GRADE <> 'WITHDRAWN'")
 	Map<String, Object> loginCheck(MemberVO vo);
-	
 }
-
-

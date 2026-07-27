@@ -1,22 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.ictedu.projectBack.dao.survey.ISurveyDao">
+<mapper namespace="kr.co.ictedu.projectBack.dao.survey.SurveyDao">
 
+	<!--관리자 평가지 등록 매퍼 쿼리문-->
 	<insert id="insertSurvey" parameterType="surveyvo">
-		INSERT INTO SURVEY VALUES(survey_seq.nextVal,#{code},#{sub},sysdate)
+		INSERT INTO SURVEY (svnum, code, sub, sdate)
+		VALUES(survey_seq.nextVal,#{code},#{sub},sysdate)
 	</insert>
 
+	<!--관리자 평가지 평가 항목 등록 매퍼 쿼리문-->
 	<insert id="insertQuestions" parameterType="java.util.List">
 		INSERT ALL
 		<foreach collection="list" item="item">
 			INTO SURVEY_QUESTIONS (SVNUM, QUESTIONS_ID, QUESTIONS_TEXT)
-			VALUES (SURVEY_SEQ.CURRVAL, #{item.QUESTIONS_ID}, #{item.QUESTIONS_TEXT})
+			VALUES (SURVEY_SEQ.CURRVAL, #{item.questions_id}, #{item.questions_text})
 		</foreach>
-		SELECT * FROM DUAL
+		SELECT 1 FROM DUAL
 	</insert>
 	
-	<insert id="insertRatings" parameterType="srvo">
-		INSERT INTO SURVEY_RESULT VALUES ()
+	<!--평점 등록 매퍼 쿼리문-->
+	<insert id="insertResult" parameterType="java.util.List">
+		INSERT ALL
+		<foreach collection="list" item="item">
+			INTO SURVEY_RESULT (MNUM, SVNUM, QUESTIONS_ID, RATING, REQUEST, RESDATE)
+			VALUES (#{item.mnum}, #{item.svnum}, #{item.questions_id}, #{item.rating}, #{item.request, jdbcType=CLOB}, SYSDATE)
+		</foreach>
+		SELECT 1 FROM DUAL
 	</insert>
 
+	<!--최신 평가지 출력 매퍼 쿼리문-->
+	<select id="selectLatestSurvey" resultType="surveyvo">
+		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
+		WHERE SVNUM = (SELECT MAX(SVNUM) FROM SURVEY)
+	</select>
+
+	<!--선택한 평가지 출력 매퍼 쿼리문 -->
+	<select id="selectSurvey" parameterType="int" resultType="surveyvo">
+		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
+		WHERE SVNUM = #{SVNUM}
+	</select>
+	
+	<!--선택한 평가지의 평가 항목 출력 매퍼 쿼리문-->
+	<select id="selectQuestions" parameterType="int" resultType="sqvo">
+		SELECT questions_text FROM SURVEY_QUESTIONS
+		WHERE SVNUM = #{SVNUM}
+		ORDER BY QUESTIONS_ID
+	</select>
+
+	<!--모든 추가 요청 사항 출력 매퍼 쿼리문-->
+	<select id="selectAllRequest" resultType="map">
+		SELECT DISTINCT request, TO_CHAR(resdate, 'YYYY.MM.DD') AS resdate FROM SURVEY_RESULT
+		WHERE REQUEST IS NOT NULL
+	</select>
+	
+	<!--저장된 모든 평가지의 svnum, sdate 조회 매퍼 쿼리문-->
+	<select id="selectSdate" parameterType="map">
+		SELECT svnum, TO_CHAR(SDATE, 'YYYY.MM.DD') AS sdate FROM SURVEY 
+		ORDER BY SDATE DESC
+	</select>
+	
+	<!--선택한 평가지 별, 질문 하나 당 평균 출력 매퍼 쿼리문 -->
+	<select id="selectAvg" parameterType="int" resultType="map">
+		SELECT questions_id, ROUND(AVG(RATING),1) AS avg FROM SURVEY_RESULT
+		WHERE SVNUM = #{SVNUM}
+		GROUP BY QUESTIONS_ID
+		ORDER BY QUESTIONS_ID
+	</select>
 </mapper>
