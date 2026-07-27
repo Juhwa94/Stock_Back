@@ -13,7 +13,7 @@ public interface CommunityDao {
 	void add(CommunityVO vo);
 	List<CommunityVO> list(Map<String, String> map);
 	int totalCount(Map<String, String> map);
-	void hit(int num);
+	void chit(int num);
 	CommunityVO detail(int num);
 	void del(int num);
 	void update(CommunityVO vo);
