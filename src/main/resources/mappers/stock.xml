@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.ictedu.projectBack.dao.stock.StockDao">
+	<!-- stock 테이블에 값을 저장하는 구문 -->
+	<insert id="addStock" parameterType="svo">
+		INSERT INTO stock VALUES(stock_seq.NEXTVAL,
+		#{sisbn},#{sname},#{scategory},#{spublisher},#{sauthor},#{samount},#{sprice},sysdate,#{membernum})
+	</insert>
+	<insert id="addStockImg" parameterType="java.util.List">
+		<!-- 현재 시퀀스 값 가져오기 -->
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT stock_seq.CURRVAL FROM dual
+		</selectKey>
+		<foreach collection="list" item="image" separator=" " open="INSERT ALL"
+			close="select * from dual">
+			INTO stockimage (stocknum,stockimage) VALUES(#{id},
+			#{image.stockimage})
+		</foreach>
+	</insert>
+	<select id="stockList" parameterType="map" resultType="map"> SELECT s.snum,
+		s.sisbn, s.sname, s.scategory, s.spublisher, s.sauthor, s.samount,
+		s.sprice, s.sdate, si.stocknum, si.stockimage FROM ( SELECT snum, sisbn,
+		sname, scategory, spublisher, sauthor, samount, sprice, sdate,
+		ROW_NUMBER() OVER(ORDER BY snum desc) AS row_num FROM stock <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						sisbn like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						sname like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						scategory like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 4">
+						spublisher like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 5">
+						sauthor like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+		) s LEFT JOIN ( SELECT stocknum, stockimage FROM( SELECT stocknum,
+		stockimage, ROW_NUMBER() OVER(PARTITION BY stocknum ORDER BY stockimage)
+		AS rn FROM STOCKIMAGE ) WHERE rn=1) si ON s.snum=si.stocknum WHERE
+		s.row_num BETWEEN #{begin} AND #{end} ORDER BY s.snum desc </select>
+
+	<!-- int totalCount(Map<String, String> map) -->
+	<select id="totalCount" resultType="int" parameterType="map"> SELECT
+		COUNT(*) cnt FROM stock <if
+			test="searchType != null and searchValue != null">
+			<where>
+				<choose>
+					<when test="searchType == 1">
+						sisbn like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 2">
+						sname like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 3">
+						scategory like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 4">
+						spublisher like '%' || #{searchValue} || '%'
+					</when>
+					<when test="searchType == 5">
+						sauthor like '%' || #{searchValue} || '%'
+					</when>
+				</choose>
+			</where>
+		</if>
+	</select>
+
+	<select id="myStockList" parameterType="map" resultType="map"> SELECT
+		s.snum, s.sisbn, s.sname, s.scategory, s.spublisher, s.sauthor,
+		s.samount, s.sprice, s.sdate, si.stockimage FROM ( SELECT snum, sisbn,
+		sname, scategory, spublisher, sauthor, samount, sprice, sdate,
+		ROW_NUMBER() OVER(ORDER BY snum DESC) AS row_num FROM stock WHERE
+		membernum = #{membernum} <if
+			test="searchType != null and searchValue != null">
+			<choose>
+				<when test="searchType == 1">
+					AND sisbn LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 2">
+					AND sname LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 3">
+					AND scategory LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 4">
+					AND spublisher LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 5">
+					AND sauthor LIKE '%' || #{searchValue} || '%'
+				</when>
+			</choose>
+		</if>
+		) s LEFT JOIN ( SELECT stocknum, stockimage FROM ( SELECT
+		stocknum,stockimage,ROW_NUMBER() OVER(PARTITION BY stocknum ORDER BY
+		stockimage) rn FROM STOCKIMAGE ) WHERE rn = 1 ) si ON s.snum =
+		si.stocknum WHERE s.row_num BETWEEN #{begin} AND #{end} ORDER BY s.snum
+		DESC </select>
+
+	<select id="myStockTotalCount" parameterType="map" resultType="int"> SELECT
+		COUNT(*) FROM stock WHERE membernum = #{membernum} <if
+			test="searchType != null and searchValue != null">
+			<choose>
+				<when test="searchType == 1">
+					AND sisbn LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 2">
+					AND sname LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 3">
+					AND scategory LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 4">
+					AND spublisher LIKE '%' || #{searchValue} || '%'
+				</when>
+				<when test="searchType == 5">
+					AND sauthor LIKE '%' || #{searchValue} || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="stockDetail" parameterType="int" resultType="map">
+	    SELECT
+	        s.snum,s.sisbn,s.sname,s.spublisher,s.sauthor,s.samount,
+	        s.sprice,s.scategory,s.sdate,s.membernum,
+	        si.stocknum,si.stockimage
+	    FROM stock s
+	    LEFT JOIN stockimage si
+	    ON s.snum = si.stocknum
+	    WHERE s.snum = #{snum}
+	</select>
+</mapper>

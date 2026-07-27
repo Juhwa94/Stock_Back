@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class StockVO {
 	private Integer snum;
-	private String sisnb;
+	private String sisbn;
 	private String sname;
 	private String spublisher;
 	private String sauthor;
