@@ -16,6 +16,7 @@ import kr.co.ictedu.projectBack.vo.SurveyVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -46,6 +47,12 @@ public class SurveyController {
 		service.addResult(srlist);
 		return ResponseEntity.ok("success");
 		
+	}
+	
+	@DeleteMapping("/delOldRequest")
+	public ResponseEntity<String> delRequest() {
+		service.delRequest();
+		return ResponseEntity.ok("success");
 	}
 	
 	/**

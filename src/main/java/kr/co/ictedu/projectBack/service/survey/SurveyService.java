@@ -126,6 +126,11 @@ public class SurveyService {
 		return surveyDao.selectAllRequest();
 	}
 
+	@Transactional
+	public void delRequest() {
+		surveyDao.deleteOldRequest();
+	}
+	
 	private void setDummy() {
 		SurveyVO svo = new SurveyVO();
 		
