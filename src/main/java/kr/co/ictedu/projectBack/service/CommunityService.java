@@ -33,13 +33,13 @@ public class CommunityService {
 		return communityDao.totalCount(map);
 	}
 	
-	public void hit(int num) {
-		communityDao.hit(num);
+	public void chit(int num) {
+		communityDao.chit(num);
 	}
 
 	// 상세보기 하기 전에 한번 조회수를 증가 시키기
 	public CommunityVO detail(int num) {
-		hit(num);
+		chit(num);
 		return communityDao.detail(num);
 	}
 	public CommunityVO get(int num) {
