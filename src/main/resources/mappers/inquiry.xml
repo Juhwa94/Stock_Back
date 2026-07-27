@@ -4,7 +4,7 @@
 
 	<insert id="add" parameterType="invo">
 		insert into inquiry values(inquiry_seq.nextVal,#{ititle},
-		#{iwriter},#{icontent},sysdate,#{membernum},#{imgn})
+		#{iwriter},#{icontent},sysdate,#{imgn},#{membernum})
 	</insert>
 
     <select id="list" resultType="invo" parameterType="map">
