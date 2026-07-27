@@ -66,4 +66,9 @@
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
 	</select>
+	
+	<delete id="deleteOldRequest">
+		DELETE FROM SURVEY_RESULT
+		WHERE (TO_DATE(SYSDATE)-TO_DATE(RESDATE)) >= 90
+	</delete>
 </mapper>

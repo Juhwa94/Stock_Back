@@ -3,6 +3,7 @@ package kr.co.ictedu.projectBack.dao.survey;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.ictedu.projectBack.vo.SurveyQuestionsVO;
@@ -18,7 +19,7 @@ public interface SurveyDao {
 	 
 	 void insertResult(List<SurveyResultVO> rlist);
 	 
-	 void deleteSurvey();
+	 void deleteOldRequest();
 	 
 	 SurveyVO selectLatestSurvey();
 	 
