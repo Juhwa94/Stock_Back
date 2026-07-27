@@ -68,17 +68,22 @@ public class SurveyService {
 	 * @return HashMap, 기본적으로 surveyVO가 있는 Map 안에 질문이 들어있는 Map을 넣어 이중 Map 객체를 반환합니다.
 	 * */
 	public Map<String, Object> selectSurvey() {
+		
 		SurveyVO svo = surveyDao.selectLatestSurvey();
-		List<SurveyQuestionsVO> qlist = (ArrayList<SurveyQuestionsVO>) surveyDao.selectQuestions(svo.getSvnum());
+		if(svo == null) {
+			setDummy();
+			svo = surveyDao.selectLatestSurvey();
+		}
 		
 		Map<String, Object> surveyDataMap = new HashMap<>();
+		
+		List<SurveyQuestionsVO> qlist = surveyDao.selectQuestions(svo.getSvnum());
 		
 		surveyDataMap.put("svnum", svo.getSvnum());
 		surveyDataMap.put("code", svo.getCode());
 		surveyDataMap.put("sub", svo.getSub());
 		surveyDataMap.put("sdate", svo.getSdate());
 		surveyDataMap.put("questions", qlist);
-
 		return surveyDataMap;
 	}
 	
@@ -119,6 +124,30 @@ public class SurveyService {
 
 	public List<Map<String, Object>> getAllRequest() {
 		return surveyDao.selectAllRequest();
+	}
+
+	private void setDummy() {
+		SurveyVO svo = new SurveyVO();
+		
+		svo.setCode(5);
+		svo.setSub("프로그램 만족도 조사");
+		List<SurveyQuestionsVO> dummyList = new ArrayList<>();
+			
+		String[] dummyDataList = {"도서 검색 및 데이터 처리 속도에 만족하십니까?",
+			                              "메뉴 구성과 화면 디자인이 사용하기 편리했습니까?",
+			                              "주문 연동 및 재고 수량의 정확성에 만족하십니까?",
+			                              "재고 부족 알림 및 모니터링 기능이 업무에 도움이 되었습니까?",
+			                              "향후 이 프로그램을 지속적으로 사용할 의향이 있으십니까?"};
+			
+			for(int i=0; i<dummyDataList.length; i++) {
+				SurveyQuestionsVO sqvo = new SurveyQuestionsVO();
+				sqvo.setQuestions_id(i+1);
+				sqvo.setQuestions_text(dummyDataList[i]);
+				
+				dummyList.add(sqvo);
+			}
+			svo.setQuestions(dummyList);
+			addSurvey(svo);
 	}
 }
 

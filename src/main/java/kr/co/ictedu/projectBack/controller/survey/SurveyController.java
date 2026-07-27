@@ -40,7 +40,6 @@ public class SurveyController {
 	 * @param vo
 	 * @detail
 	 */
-	@CrossOrigin("http://localhost:3000,http://192.168.0.11:3000")
 	@PostMapping("/addResult")
 	public ResponseEntity<String> addResult(@RequestBody List<SurveyResultVO> srlist) {
 		
