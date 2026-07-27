@@ -4,11 +4,11 @@
 <mapper namespace="kr.co.ictedu.projectBack.dao.CommentsDao">
 	<insert id="add" parameterType="tomivo">
 		INSERT INTO comments values(comments_seq.NEXTVAL,
-		 #{cwriter}, #{ccontent}, SYSDATE, #{communitynum} )
+		 #{cwriter}, #{ccontent}, SYSDATE, #{communitynum},#{merbernum} )
 	</insert>
 	<select id="list" parameterType="map" resultType="tomivo"> SELECT cnum,
-		cwriter, CCONTENT,  cregdate, communitynum, row_num FROM (SELECT cnum,
-		cwriter, CCONTENT,  cregdate, communitynum, ROW_NUMBER() OVER(ORDER
+		cwriter, CCONTENT,  cregdate, communitynum, mumbernum, row_num FROM (SELECT cnum,
+		cwriter, CCONTENT,  cregdate, communitynum, mumbernum, ROW_NUMBER() OVER(ORDER
 		BY cnum desc) AS row_num FROM comments <if
 			test="searchType != null and searchValue != null">
 			<where>
@@ -46,15 +46,15 @@
 	</select>
 
 	<update id="update" parameterType="tomivo">
-    UPDATE community
+    UPDATE comments
     SET
-        ccontent = #{ccontent}, 
+        ccontent = #{ccontent} 
     WHERE cnum = #{cnum}
 </update>
 
 
 	<select id="detail" parameterType="int" resultType="tomivo">
-		SELECT cnum, cwriter, CCONTENT, cregdate, communitynum FROM comments
+		SELECT cnum, cwriter, CCONTENT, cregdate, communitynum, membernum FROM comments
 		WHERE cnum=#{cnum}
 	</select>
 

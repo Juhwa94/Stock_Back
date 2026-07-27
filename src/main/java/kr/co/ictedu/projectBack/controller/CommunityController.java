@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,20 +63,41 @@ public class CommunityController {
 	public ResponseEntity<?> communityAdd(CommunityVO vo, HttpServletRequest request) {
 
 		MultipartFile mf = vo.getMfile();
+		
+		// 여기까진 정상
+		System.out.println(mf);
 
 		String oriFn = mf.getOriginalFilename();
+		
+	    File dir = new File(filePath);
+
+	    // 폴더 없으면 생성
+	    if(!dir.exists()) {
+	        dir.mkdirs();
+	    }
+		
 		System.out.println("파일 이름 : " + oriFn);
 		// ------------------------------------------
 		StringBuilder path = new StringBuilder();
-		path.append(filePath).append("\\");
-		path.append(oriFn);
 
 		System.out.println("FullPath : " + path);
 		// ------------------------------------------
-		File f = new File(path.toString());
+		File f = new File(filePath, oriFn);
+		
+		System.out.println("저장 경로 : " + f.getAbsolutePath());
+		System.out.println("부모 폴더 존재 : " + f.getParentFile().exists());
 
 		try {
 			mf.transferTo(f);
+			
+			
+
+		    System.out.println("===== transferTo 이후 =====");
+		    System.out.println("파일 존재 여부 : " + f.exists());
+		    System.out.println("파일 크기 : " + f.length());
+		    System.out.println("==========================");
+
+			
 			vo.setCimgn(oriFn);
 			comm.add(vo);
 
@@ -141,29 +163,110 @@ public class CommunityController {
 //		
 //		return upBoardCommService.listComment(num);
 //	}
-	@PostMapping("coUpdate")
-	public ResponseEntity<?> update(CommunityVO vo) {
+	@PostMapping(
+	        value="/coUpdate",
+	        consumes="multipart/form-data"
+	)
+	public ResponseEntity<?> update(@ModelAttribute CommunityVO vo) {
 
-		MultipartFile mf = vo.getMfile();
 
-		if (mf != null && !mf.isEmpty()) {
-			String oriFn = mf.getOriginalFilename();
-			File file = new File(filePath, oriFn);
+	    try {
 
-			try {
-				mf.transferTo(file);
-				vo.setCimgn(oriFn);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 수정 실패");
+	        // 기존 게시글 조회
+	        CommunityVO oldVO = comm.detail(vo.getCnum());
 
-			}
-		}
 
-		comm.update(vo);
-		return ResponseEntity.ok("수정 완료");
+	        MultipartFile mf = vo.getMfile();
+
+
+
+	        // 새 이미지가 있을 경우
+	        if(mf != null && !mf.isEmpty()) {
+
+
+	            // 기존 이미지 삭제
+	            if(oldVO != null 
+	                    && oldVO.getCimgn() != null
+	                    && !oldVO.getCimgn().equals("")) {
+
+
+	                File oldFile = new File(
+	                        filePath,
+	                        oldVO.getCimgn()
+	                );
+
+
+	                if(oldFile.exists()) {
+
+	                    oldFile.delete();
+
+	                }
+
+	            }
+
+
+
+	            // 새 파일명
+	            String oriFn = mf.getOriginalFilename();
+
+
+	            // 저장 폴더 확인
+	            File dir = new File(filePath);
+
+	            if(!dir.exists()) {
+
+	                dir.mkdirs();
+
+	            }
+
+
+
+	            // 새 파일 저장
+	            File newFile = new File(
+	                    dir,
+	                    oriFn
+	            );
+
+
+	            mf.transferTo(newFile);
+
+
+
+	            // DB 저장할 이미지명 변경
+	            vo.setCimgn(oriFn);
+
+
+
+	        } else {
+
+	            // 이미지 수정 안 하면 기존 이미지 유지
+	            vo.setCimgn(oldVO.getCimgn());
+
+	        }
+
+
+
+	        comm.update(vo);
+
+
+
+	        return ResponseEntity.ok("수정 완료");
+
+
+
+	    } catch(Exception e) {
+
+
+	        e.printStackTrace();
+
+
+	        return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("파일 수정 실패");
+
+	    }
+
 	}
-
 	@DeleteMapping("/coDelete")
 	public ResponseEntity<?> communityDelete(@RequestParam("num") int num) {
 
