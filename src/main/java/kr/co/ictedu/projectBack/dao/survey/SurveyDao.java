@@ -20,10 +20,16 @@ public interface SurveyDao {
 	 
 	 void deleteSurvey();
 	 
-	 SurveyVO selectSurvey();
+	 SurveyVO selectLatestSurvey();
+	 
+	 SurveyVO selectSurvey(int svnum);
 	 
 	 List<SurveyQuestionsVO> selectQuestions(int svnum);
 	 
-	 List<Map<String, Object>> selectAverages();
+	 List<Map<String, Object>> selectAvg(int svnum);
+	 
+	 List<Map<String, Object>> selectSdate();
+
+	 List<Map<String, Object>> selectAllRequest();
 	 
 }

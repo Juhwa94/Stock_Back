@@ -27,33 +27,43 @@
 		</foreach>
 		SELECT 1 FROM DUAL
 	</insert>
-	
+
 	<!--최신 평가지 출력 매퍼 쿼리문-->
-	<select id="selectSurvey" resultType="surveyvo">
+	<select id="selectLatestSurvey" resultType="surveyvo">
 		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
 		WHERE SVNUM = (SELECT MAX(SVNUM) FROM SURVEY)
 	</select>
+
+	<!--선택한 평가지 출력 매퍼 쿼리문 -->
+	<select id="selectSurvey" parameterType="int" resultType="surveyvo">
+		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
+		WHERE SVNUM = #{SVNUM}
+	</select>
 	
-	<!--최신 평가지의 평가 항목 출력 매퍼 쿼리문-->
+	<!--선택한 평가지의 평가 항목 출력 매퍼 쿼리문-->
 	<select id="selectQuestions" parameterType="int" resultType="sqvo">
 		SELECT questions_text FROM SURVEY_QUESTIONS
 		WHERE SVNUM = #{SVNUM}
 		ORDER BY QUESTIONS_ID
 	</select>
+
+	<!--모든 추가 요청 사항 출력 매퍼 쿼리문-->
+	<select id="selectAllRequest" resultType="map">
+		SELECT DISTINCT request, TO_CHAR(resdate, 'YYYY.MM.DD') AS resdate FROM SURVEY_RESULT
+		WHERE REQUEST IS NOT NULL
+	</select>
 	
-	<!--평가지 별, 질문 하나 당 평균 출력 매퍼 쿼리문-->
-	<select id="selectAverages" resultType="map">
+	<!--저장된 모든 평가지의 svnum, sdate 조회 매퍼 쿼리문-->
+	<select id="selectSdate" parameterType="map">
+		SELECT svnum, TO_CHAR(SDATE, 'YYYY.MM.DD') AS sdate FROM SURVEY 
+		ORDER BY SDATE DESC
+	</select>
+	
+	<!--선택한 평가지 별, 질문 하나 당 평균 출력 매퍼 쿼리문 -->
+	<select id="selectAvg" parameterType="int" resultType="map">
 		SELECT questions_id, ROUND(AVG(RATING),1) AS avg FROM SURVEY_RESULT
-		WHERE RESDATE = (SELECT MAX(RESDATE) FROM SURVEY)
+		WHERE SVNUM = #{SVNUM}
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
 	</select>
-	<!--List<Map<String, Object>> selectAverages();-->
-	
-	<!--가장 오래된 평가지 삭제 매퍼 쿼리문-->
-	<delete id="deleteSurvey">
-		DELETE FROM SURVEY
-		WHERE SVNUM = (SELECT MIN(SVNUM) FROM SURVEY) PURGE
-	</delete>
-
 </mapper>
