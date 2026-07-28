@@ -12,6 +12,7 @@ import lombok.Setter;
 public class CommentsVO {
 private int cnum;
 private int communitynum;
+private int membernum;
 private String cwriter;
 private String ccontent;
 private String cregdate;

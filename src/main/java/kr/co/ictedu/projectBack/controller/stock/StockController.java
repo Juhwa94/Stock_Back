@@ -9,8 +9,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +47,7 @@ public class StockController {
 		
 		List<StockImagesVO> imageList = new ArrayList<>();
 		
-		File folder = new File(filePath, "gallery");
+		File folder = new File(filePath, "stock");
 
 		if (!folder.exists()) {
 		    folder.mkdirs();
@@ -64,21 +67,17 @@ public class StockController {
 				}
 			}
 		}
-		
-		// GalleryVO 이미지 리스트 설정
 		galleryVO.setGetimglist(imageList);
 		
 		try {
 			stockService.transationProcess(galleryVO, imageList);
-		System.out.println("정상적인 처리");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Rollback");
 		}
-		return ResponseEntity.ok("갤러리 등록 성공");
+		return ResponseEntity.ok("재고 등록 성공");
 	}
 	
-	// http://192.168.0.45/myictstudy/gallery/galleryList
 	@RequestMapping("/stockList")
 	public Map<String, Object> stockList(
 			@RequestParam Map<String, String> paramMap,
@@ -147,5 +146,19 @@ public class StockController {
 		response.put("endPage", pageVO.getEndPage()); // 블록의 끝
 		
 		return response;
+	}
+	
+	@PutMapping("/updateStock")
+	public ResponseEntity<?> updateStock(StockVO vo) {
+
+	    int result = stockService.updateStock(vo);
+
+	    return ResponseEntity.ok(result);
+	}
+	
+	@DeleteMapping("/deleteStock")
+	public ResponseEntity<?> deleteStock(@RequestParam("snum") int num) {
+		stockService.deleteStock(num);
+		return ResponseEntity.ok("재고 삭제 성공");
 	}
 }

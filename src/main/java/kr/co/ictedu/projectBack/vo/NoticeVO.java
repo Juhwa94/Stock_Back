@@ -19,6 +19,6 @@ public class NoticeVO {
 	private String nwriter;
 	private String ncontent;
 	private String ndate;
-	private MultipartFile mfile;
+
 	
 }

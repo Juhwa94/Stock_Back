@@ -139,4 +139,22 @@
 	    ON s.snum = si.stocknum
 	    WHERE s.snum = #{snum}
 	</select>
+	
+	<update id="updateStock" parameterType="svo">
+	    UPDATE stock
+	    SET
+	        sisbn = #{sisbn},
+	        sname = #{sname},
+	        scategory = #{scategory},
+	        spublisher = #{spublisher},
+	        sauthor = #{sauthor},
+	        samount = #{samount},
+	        sprice = #{sprice}
+	    WHERE snum = #{snum}
+	</update>
+	
+	<delete id="deleteStock" parameterType="int">
+		DELETE FROM stock WHERE snum=#{snum}
+	</delete>
+	
 </mapper>
