@@ -29,5 +29,11 @@ public interface StockDao {
 	int myStockTotalCount(Map<String, String> map);
 
 	List<Map<String,Object>> stockDetail(int snum);
+	
+	// 재고 수정
+	int updateStock(StockVO vo);
+	
+	// 재고 삭제
+	void deleteStock(int snum);
 
 }

@@ -54,6 +54,13 @@ public class StockService {
 	public List<Map<String,Object>> stockDetail(int snum) {
 		return stockDao.stockDetail(snum);
 	};
+
+	public int updateStock(StockVO vo) {
+	    return stockDao.updateStock(vo);
+	}
 	
+	public void deleteStock(int snum) {
+		stockDao.deleteStock(snum);
+	};
 
 }
