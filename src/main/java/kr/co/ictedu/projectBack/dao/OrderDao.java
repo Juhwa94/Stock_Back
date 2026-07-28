@@ -1,5 +1,6 @@
 package kr.co.ictedu.projectBack.dao;
 
+//kr.co.ictedu.projectBack.dao.OrderDao
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,6 @@ import kr.co.ictedu.projectBack.vo.OrderItemVO;
 public interface OrderDao {
 
 	void addOrderForm(OrderFormVO ofvo);
-	void addOrderItem(OrderItemVO oivo);
-	int fkSelect();
+	void addOrderItem(List<OrderItemVO> oivo);
 
 }

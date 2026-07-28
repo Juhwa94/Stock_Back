@@ -3,13 +3,30 @@
 <mapper namespace="kr.co.ictedu.projectBack.dao.OrderDao">
 	<insert id="addOrderForm" parameterType="ofvo">
 		INSERT INTO ORDERFORM (OFNUM,ONAME,OADDR,OPHONE,OFDATE,MNUM,OIMG,OFCOMPANY)
-		VALUES (orderform_seq.NEXTVAL, #{oname}, #{oaddr}, #{ophone}, SYSDATE, #{mnum}, #{oimg}, #{ofcompany})
+		VALUES (orderform_seq.NEXTVAL, #{oname}, #{oaddr}, #{ophone}, 
+		SYSDATE, #{mnum}, #{oimg}, #{ofcompany})
 	</insert>
-	<insert id="addOrderItem" parameterType="oivo"> 
+<!--	<insert id="addOrderItem" parameterType="oivo"> 
 		INSERT INTO	ORDERITEM (OINUM,OINAME,OIPUBLISHER,OIPRICE,OISUMPRICE,OIAMOUNT,OFNUM) 
 		VALUES (orderitem_seq.NEXTVAL, #{oiname}, #{oipublisher}, #{oiprice}, #{oisumprice}, #{oiamount}, #{ofnum})
 	</insert>
 	<select id="fkSelect" resultType="int">
 		SELECT orderform_seq.currVal FROM dual
-	</select>
+	</select>-->
+	
+	<insert id="addOrderItem" parameterType="java.util.List">
+    INSERT INTO ORDERITEM (OINUM, OINAME, OIPUBLISHER, OIPRICE, OISUMPRICE, OIAMOUNT, OFNUM)
+    SELECT orderitem_seq.NEXTVAL, A.oiname, A.oipublisher, A.oiprice, A.oisumprice, A.oiamount,orderform_seq.currVal
+    FROM (
+        <foreach collection="list" item="item" separator="UNION ALL">
+            SELECT 
+                #{item.oiname} AS oiname, 
+                #{item.oipublisher} AS oipublisher, 
+                #{item.oiprice} AS oiprice, 
+                #{item.oisumprice} AS oisumprice,
+                #{item.oiamount} AS oiamount
+            FROM DUAL
+        </foreach>
+    ) A
+	</insert>
 </mapper>

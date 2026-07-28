@@ -18,4 +18,5 @@ public class ProductItemVO {
 	private int pisumprice;		// 1행의 합계 가격(가격 * 수량)
 	private int piunitCost;		// 원가(도매단가)
 	private int pfnum;			// pk
+	private String picategory;  //카테고리
 }

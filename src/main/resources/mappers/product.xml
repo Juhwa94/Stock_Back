@@ -5,12 +5,25 @@
 		INSERT INTO PRODUCTFORM (PSTARTDATE,PENDDATE,PFNUM)
 		VALUES (#{pstartdate}, #{penddate}, productForm_seq.NEXTVAL)
 	</insert>
-	<insert id="addProductItem" parameterType="pivo">
-		INSERT INTO	PRODUCTITEM (PINUM,PINAME,PIISBN,PIPRICE,PIAMOUNT,PISUMPRICE,PIUNITCOST,PFNUM) 
-		VALUES (productItem_seq.NEXTVAL, #{piname}, #{piisbn}, #{piprice}, 
-		#{piamount}, #{pisumprice}, #{piunitCost}, #{pfnum})	
+	
+	<insert id="addProductItem" parameterType="java.util.List">
+    INSERT INTO PRODUCTITEM (PINUM,PINAME,PIISBN,PIPRICE,PIAMOUNT,PISUMPRICE,PIUNITCOST,PFNUM,picategory)
+    SELECT 
+    productItem_seq.NEXTVAL, 
+    A.PINAME,A.PIISBN,A.PIPRICE,A.PIAMOUNT,A.PISUMPRICE,A.PIUNITCOST,
+    productForm_seq.currVal,A.picategory
+    FROM (
+        <foreach collection="list" item="item" separator="UNION ALL">
+            SELECT 
+                #{item.piname} AS piname, 
+                #{item.piisbn} AS piisbn, 
+                #{item.piprice} AS piprice, 
+                #{item.piamount} AS piamount,
+                #{item.pisumprice} AS pisumprice,
+                #{item.piunitCost} AS piunitCost,
+                #{item.picategory} AS picategory
+            FROM DUAL
+        </foreach>
+    ) A
 	</insert>
-	<select id="fkSelect1" resultType="int">
-		SELECT productForm_seq.currVal FROM dual
-	</select>
 </mapper>

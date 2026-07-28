@@ -21,19 +21,15 @@ public class ProductService {
 	public void addProduct(ProductFormVO pfvo) {
 		productDao.addProductForm(pfvo);
 		
-		int index = 0;
-		int fk = productDao.fkSelect1();
-		
 		List<ProductItemVO> list = pfvo.getProductItem();
+		
 		for (ProductItemVO itemvo : list) {
 			int price = itemvo.getPiprice();
 			int amount = itemvo.getPiamount();
 			int sumprice = price * amount;
 			itemvo.setPisumprice(sumprice);
-			
-			itemvo.setPfnum(fk);
-			productDao.addProductItem(list.get(index));
-			index++;
 		}
+		
+		productDao.addProductItem(list);
 	}
 }
