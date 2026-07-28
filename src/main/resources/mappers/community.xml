@@ -43,6 +43,13 @@
 				</choose>
 			</where>
 		</if>
+		
+	</select>
+	<select id="myPostList" parameterType="map" resultType="comivo">
+    SELECT *
+    FROM (SELECT cnum, ctitle, cwriter, ccontent, chit, cdate, cimgn, membernum,
+			ROW_NUMBER() OVER (ORDER BY cnum DESC) AS row_num FROM community WHERE membernum = #{membernum})
+ 
 	</select>
 	<update id="update" parameterType="comivo">
     UPDATE community

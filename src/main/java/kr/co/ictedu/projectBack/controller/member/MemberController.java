@@ -49,9 +49,17 @@ public class MemberController {
 	    System.out.println("이메일 중복 확인 : " + email);
 	    return memberService.checkemail(email);
 	}
-
+//	@GetMapping("/mypage")
+//	public MemberVO getMyInfo(@RequestParam("email") String email) {
+//	    MemberVO vo = memberService.getMemberByEmail(email);
+//	    if (vo != null) {
+//	        vo.setPwd(null);
+//	    }
+//	    return vo;
+//	}
 	@GetMapping("/mypage")
 	public MemberVO getMyInfo(HttpSession session) {
+
 	    MemberVO loginMember =
 	        (MemberVO) session.getAttribute("loginMember");
 	    if(loginMember == null) {
