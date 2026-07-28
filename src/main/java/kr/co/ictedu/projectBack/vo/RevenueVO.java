@@ -15,5 +15,5 @@ public class RevenueVO {
 	private int rtotalsales;	// 총 매출액
 	private int rtotalcost;		// 총 원가
 	private int rtotalmargin;	// 총 마진
-	private int pnum;
+	private int pfnum;
 }
