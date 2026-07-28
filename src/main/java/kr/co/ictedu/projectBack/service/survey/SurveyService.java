@@ -64,7 +64,7 @@ public class SurveyService {
 	}
 	
 	/**
-	 * @detail 회원이 평가 화면 렌더링 시 DB에서 최근에 작성된 평가지를 조회합니다.
+	 * @detail 회원이 평가 화면 렌더링 시 DB에서 최근에 작성된 평가지를 조회합니다. 만약 평가지 데이터가 없다면 더미데이터를 넣어 다시 평가지를 조회합니다.
 	 * @return HashMap, 기본적으로 surveyVO가 있는 Map 안에 질문이 들어있는 Map을 넣어 이중 Map 객체를 반환합니다.
 	 * */
 	public Map<String, Object> selectSurvey() {
@@ -73,6 +73,9 @@ public class SurveyService {
 		if(svo == null) {
 			setDummy();
 			svo = surveyDao.selectLatestSurvey();
+			System.out.println("더미데이터 주입");
+		}else {
+			System.out.println("db 데이터 조회");
 		}
 		
 		Map<String, Object> surveyDataMap = new HashMap<>();
@@ -88,6 +91,7 @@ public class SurveyService {
 	}
 	
 	/**
+	 * @param Map<String, Object>; 
 	 * @detail 
 	 * @return 
 	 * */
@@ -122,15 +126,25 @@ public class SurveyService {
 		return surveyDao.selectSdate();
 	}
 
+	/**
+	 * @detail 관리자가 조회하여 관리할 수 있도록 모든 추가 요청을 Map으로 담고, 그것을 또 배열에 담아 반환합니다.
+	 * @return List<Map<String, Object>>; 중복되지 않는 추가 요청을 담고있는 Map과 그 Map을 담는 배열 List
+	 */
 	public List<Map<String, Object>> getAllRequest() {
 		return surveyDao.selectAllRequest();
 	}
 
+	/**
+	 * @detail 3개월 이상 된 추가 요청 데이터를 db에서 삭제합니다.
+	 */
 	@Transactional
 	public void delRequest() {
 		surveyDao.deleteOldRequest();
 	}
 	
+	/**
+	 * @detail 더미데이터를 db에 저장합니다.
+	 */
 	private void setDummy() {
 		SurveyVO svo = new SurveyVO();
 		
