@@ -43,9 +43,7 @@ public class NoticeController {
      * 공지 등록
      */
     @PostMapping("/noAdd")
-    public ResponseEntity<?> noAdd(
-            @RequestBody NoticeVO vo
-    ){
+    public ResponseEntity<?> noAdd(NoticeVO vo){
 
 
         noti.add(vo);
@@ -184,8 +182,7 @@ public class NoticeController {
      * 공지 수정
      */
     @PostMapping("/noUpdate")
-    public ResponseEntity<?> update(
-            @RequestBody NoticeVO vo
+    public ResponseEntity<?> update(NoticeVO vo
     ){
 
 
