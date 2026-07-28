@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StockImagesVO {
-	private int stocksnum;
+	private int stocknum;
 	private String stockimage;
 }

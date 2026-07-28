@@ -73,6 +73,9 @@ public class SurveyService {
 		if(svo == null) {
 			setDummy();
 			svo = surveyDao.selectLatestSurvey();
+			System.out.println("더미데이터 주입");
+		}else {
+			System.out.println("db 데이터 조회");
 		}
 		
 		Map<String, Object> surveyDataMap = new HashMap<>();
