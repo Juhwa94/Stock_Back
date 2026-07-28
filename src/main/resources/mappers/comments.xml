@@ -9,39 +9,35 @@
 	<select id="list" parameterType="map" resultType="tomivo"> SELECT cnum,
 		cwriter, CCONTENT,  cregdate, communitynum, membernum, row_num FROM (SELECT cnum,
 		cwriter, CCONTENT,  cregdate, communitynum, membernum, ROW_NUMBER() OVER(ORDER
-		BY cnum desc) AS row_num FROM comments <if
+		BY cnum desc) AS row_num FROM comments WHERE communitynum = #{communitynum} <if
 			test="searchType != null and searchValue != null">
-			<where>
 				<choose>
 					<when test="searchType == 1">
-						cwriter like '%' || #{searchValue} || '%'
+						AND cwriter like '%' || #{searchValue} || '%'
 					</when>
 				<!--	<when test="searchType == 2">
 						title like '%' || #{searchValue} || '%'
 					</when> -->
 					<when test="searchType == 2">
-						ccontent like '%' || #{searchValue} || '%'
+						AND ccontent like '%' || #{searchValue} || '%'
 					</when>
 				</choose>
-			</where>
 		</if>
 		) numbered_rows WHERE row_num BETWEEN #{begin} AND #{end} </select>
 	<select id="totalCount" resultType="int" parameterType="map"> SELECT
-		COUNT(*) cnt FROM comments <if
+		COUNT(*) cnt FROM comments WHERE communitynum = #{communitynum} <if
 			test="searchType != null and searchValue != null">
-			<where>
 				<choose>
 					<when test="searchType == 1">
-						cwriter like '%' || #{searchValue} || '%'
+						AND cwriter like '%' || #{searchValue} || '%'
 					</when>
 				<!-- <when test="searchType == 2">
 						title like '%' || #{searchValue} || '%'
 					</when> -->	
 					<when test="searchType == 2">
-						ccontent like '%' || #{searchValue} || '%'
+						AND ccontent like '%' || #{searchValue} || '%'
 					</when>
 				</choose>
-			</where>
 		</if>
 	</select>
 
