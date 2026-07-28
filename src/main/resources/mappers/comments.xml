@@ -4,11 +4,11 @@
 <mapper namespace="kr.co.ictedu.projectBack.dao.CommentsDao">
 	<insert id="add" parameterType="tomivo">
 		INSERT INTO comments values(comments_seq.NEXTVAL,
-		 #{cwriter}, #{ccontent}, SYSDATE, #{communitynum},#{merbernum} )
+		 #{cwriter}, #{ccontent}, SYSDATE, #{communitynum},#{membernum} )
 	</insert>
 	<select id="list" parameterType="map" resultType="tomivo"> SELECT cnum,
-		cwriter, CCONTENT,  cregdate, communitynum, mumbernum, row_num FROM (SELECT cnum,
-		cwriter, CCONTENT,  cregdate, communitynum, mumbernum, ROW_NUMBER() OVER(ORDER
+		cwriter, CCONTENT,  cregdate, communitynum, membernum, row_num FROM (SELECT cnum,
+		cwriter, CCONTENT,  cregdate, communitynum, membernum, ROW_NUMBER() OVER(ORDER
 		BY cnum desc) AS row_num FROM comments <if
 			test="searchType != null and searchValue != null">
 			<where>
