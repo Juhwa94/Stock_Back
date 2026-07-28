@@ -15,7 +15,6 @@ public class MemberService {
 
     @Autowired
     private MemberDao memberDao;
-
     public void create(MemberVO vo) {
     	System.out.println("1");
     	
@@ -31,16 +30,12 @@ public class MemberService {
         System.out.println("5");
     }
 
-
-
     public int checkNick(String nick) {
         return memberDao.countByNick(nick);
 	}
-
     public MemberVO getMemberByEmail(String email) {
         return memberDao.getMemberByEmail(email);
     }
-
 	public int updateMember(MemberVO vo) {
 		return memberDao.updateMember(vo);
 	}
@@ -66,8 +61,7 @@ public class MemberService {
 	    return memberDao.updateGrade(param);
 	}
 
-
-
+ 
 	public int checkemail(String email) {
 	    return memberDao.countByEmail(email);
 	}
