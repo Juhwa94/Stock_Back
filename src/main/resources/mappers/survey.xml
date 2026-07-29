@@ -67,7 +67,7 @@
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
 	</select>
-	
+
 	<!--90일 된 추가 요청 사항 삭제-->
 	<delete id="deleteOldRequest">
 		DELETE FROM SURVEY_RESULT
