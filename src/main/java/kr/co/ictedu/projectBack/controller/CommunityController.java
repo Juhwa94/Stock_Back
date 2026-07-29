@@ -62,51 +62,41 @@ public class CommunityController {
 	@PostMapping("/commAdd")
 	public ResponseEntity<?> communityAdd(CommunityVO vo, HttpServletRequest request) {
 
-		MultipartFile mf = vo.getMfile();
-		
-		// 여기까진 정상
-		System.out.println(mf);
+	    MultipartFile mf = vo.getMfile();
 
-		String oriFn = mf.getOriginalFilename();
-		
-	    File dir = new File(filePath);
+	    // 이미지가 있는 경우만 저장
+	    if (mf != null && !mf.isEmpty()) {
 
-	    // 폴더 없으면 생성
-	    if(!dir.exists()) {
-	        dir.mkdirs();
+	        File dir = new File(filePath);
+
+	        if (!dir.exists()) {
+	            dir.mkdirs();
+	        }
+
+	        String oriFn = mf.getOriginalFilename();
+
+	        File f = new File(filePath, oriFn);
+
+	        try {
+	            mf.transferTo(f);
+
+	            vo.setCimgn(oriFn);
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body("파일 업로드 실패");
+	        }
+
+	    } else {
+	        // 이미지 없이 등록
+	        vo.setCimgn(""); // 또는 ""
 	    }
-		
-		System.out.println("파일 이름 : " + oriFn);
-		// ------------------------------------------
-		StringBuilder path = new StringBuilder();
 
-		System.out.println("FullPath : " + path);
-		// ------------------------------------------
-		File f = new File(filePath, oriFn);
-		
-		System.out.println("저장 경로 : " + f.getAbsolutePath());
-		System.out.println("부모 폴더 존재 : " + f.getParentFile().exists());
+	    // 게시글 저장
+	    comm.add(vo);
 
-		try {
-			mf.transferTo(f);
-			
-			
-
-		    System.out.println("===== transferTo 이후 =====");
-		    System.out.println("파일 존재 여부 : " + f.exists());
-		    System.out.println("파일 크기 : " + f.length());
-		    System.out.println("==========================");
-
-			
-			vo.setCimgn(oriFn);
-			comm.add(vo);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 실패");
-		}
-
-		return ResponseEntity.ok().body("게시글 등록 성공!");
+	    return ResponseEntity.ok("게시글 등록 성공!");
 	}
 
 	@RequestMapping("/coList")
