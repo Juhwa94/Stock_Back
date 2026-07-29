@@ -30,13 +30,13 @@
 
 	<!--최신 평가지 출력 매퍼 쿼리문-->
 	<select id="selectLatestSurvey" resultType="surveyvo">
-		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
+		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD HH24:MI:SS') AS sdate FROM SURVEY
 		WHERE SVNUM = (SELECT MAX(SVNUM) FROM SURVEY)
 	</select>
 
 	<!--선택한 평가지 출력 매퍼 쿼리문 -->
 	<select id="selectSurvey" parameterType="int" resultType="surveyvo">
-		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD') AS sdate FROM SURVEY
+		SELECT svnum, code, sub, TO_CHAR(sdate, 'YYYY.MM.DD HH24:MI:SS') AS sdate FROM SURVEY
 		WHERE SVNUM = #{SVNUM}
 	</select>
 	
@@ -49,13 +49,14 @@
 
 	<!--모든 추가 요청 사항 출력 매퍼 쿼리문-->
 	<select id="selectAllRequest" resultType="map">
-		SELECT DISTINCT request, TO_CHAR(resdate, 'YYYY.MM.DD') AS resdate FROM SURVEY_RESULT
+		SELECT DISTINCT request, TO_CHAR(resdate, 'YYYY.MM.DD HH24:MI:SS') AS resdate FROM SURVEY_RESULT
 		WHERE REQUEST IS NOT NULL
+		ORDER BY resdate DESC
 	</select>
 	
 	<!--저장된 모든 평가지의 svnum, sdate 조회 매퍼 쿼리문-->
 	<select id="selectSdate" parameterType="map">
-		SELECT svnum, TO_CHAR(SDATE, 'YYYY.MM.DD') AS sdate FROM SURVEY 
+		SELECT svnum, TO_CHAR(SDATE, 'YYYY.MM.DD HH24:MI:SS') AS sdate FROM SURVEY 
 		ORDER BY SDATE DESC
 	</select>
 	
@@ -66,7 +67,7 @@
 		GROUP BY QUESTIONS_ID
 		ORDER BY QUESTIONS_ID
 	</select>
-	
+
 	<!--90일 된 추가 요청 사항 삭제-->
 	<delete id="deleteOldRequest">
 		DELETE FROM SURVEY_RESULT

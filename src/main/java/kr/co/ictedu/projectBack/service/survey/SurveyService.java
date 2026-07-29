@@ -90,6 +90,16 @@ public class SurveyService {
 		return surveyDataMap;
 	}
 	
+	public ArrayList<String> getQuestions(int svnum) {
+		List<SurveyQuestionsVO> qList = surveyDao.selectQuestions(svnum);
+		ArrayList<String> questions = new ArrayList<>();
+		
+		for(SurveyQuestionsVO e : qList) {
+			questions.add(e.getQuestions_text());
+		}
+		
+		return questions;
+	}
 	/**
 	 * @param Map<String, Object>; 
 	 * @detail 
