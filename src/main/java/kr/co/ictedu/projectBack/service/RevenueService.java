@@ -56,6 +56,7 @@ public class RevenueService {
 			System.out.println("리베뉴 totalCost 입력값 : " + totalCost);
 			System.out.println("리베뉴 totalMargin 입력값 : " + totalMargin);
 			rvo.setRmonth(mon);
+			rvo.setPfnum(Integer.parseInt(String.valueOf(firstRow.get(0).get("PFNUM"))));
 			rvo.setRtotalqty(totalQty);
 			rvo.setRtotalsales(totalSales);
 			rvo.setRtotalcost(totalCost);
