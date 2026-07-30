@@ -51,4 +51,7 @@ public class CommunityService {
 		communityDao.del(num);
 		
 	}
+	public List<CommunityVO> myPostList(int membernum) {
+	    return communityDao.myPostList(membernum);
+	}
 }

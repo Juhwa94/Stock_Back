@@ -17,4 +17,5 @@ public interface CommunityDao {
 	CommunityVO detail(int num);
 	void del(int num);
 	void update(CommunityVO vo);
+	List<CommunityVO> myPostList(int membernum);
 }

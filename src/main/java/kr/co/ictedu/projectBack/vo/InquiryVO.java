@@ -19,4 +19,5 @@ public class InquiryVO {
 	private int membernum;
 	private String imgn;
 	private MultipartFile mfile;
+	private String secret;
 }

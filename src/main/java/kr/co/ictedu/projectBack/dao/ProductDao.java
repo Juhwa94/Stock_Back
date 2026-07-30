@@ -12,6 +12,5 @@ import kr.co.ictedu.projectBack.vo.ProductItemVO;
 public interface ProductDao {
 
 	void addProductForm(ProductFormVO pfvo);
-	void addProductItem(ProductItemVO pivo);	
-	int fkSelect1();
+	void addProductItem(List<ProductItemVO> pivo);	
 }

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.ictedu.projectBack.dao.RevenueDao">
+	<!--리베뉴의 컬럼추출-->
+	<select id="shareChartData" resultType="map" parameterType="String">
+		SELECT
+			pro.PICATEGORY as name,
+			pro.SUMPRICE AS value,
+			ROW_NUMBER() OVER(ORDER BY pro.SUMPRICE desc) AS top
+		from
+			(
+				SELECT
+					pf.PSTARTDATE,pf.PENDDATE,pi.PICATEGORY,
+					SUM(pi.PISUMPRICE) AS SUMPRICE
+				FROM
+					PRODUCTFORM pf , PRODUCTITEM pi
+				WHERE
+					pf.PFNUM = pi.PFNUM
+				GROUP BY
+				    pf.PSTARTDATE,
+				    pf.PENDDATE,
+				    pi.PICATEGORY
+			) pro
+		WHERE
+			#{rmonth} BETWEEN TO_CHAR(pro.PSTARTDATE, 'YYYY-MM') 
+						  AND TO_CHAR(pro.PENDDATE, 'YYYY-MM')
+	</select>
+
+	<!--행 추가-->
+	<insert id="addRevenue" parameterType="rvo">
+	    INSERT INTO REVENUE (
+			RMONTH,
+			RTOTALQTY,
+			RTOTALSALES,
+			RTOTALCOST,
+			RTOTALMARGIN,
+			PFNUM) 
+		VALUES (
+			TO_DATE(#{rmonth}, 'YYYY-MM-DD'),
+			#{rtotalqty}, 
+	        #{rtotalsales}, 
+	        #{rtotalcost}, 
+	        #{rtotalmargin}, 
+	        #{pfnum}
+		)
+	</insert>
+	
+	<!--리베뉴에 사용할 재료추출 : 월,가격,수량,총판매금액,원가,카테고리,(마진:비즈니스로직)-->
+	<select id="getRevenueByMonth" parameterType="String" resultType="map">
+		select
+			pro.PIPRICE AS PRICE,
+			pro.PIAMOUNT AS RTOTALQTY,
+			pro.PISUMPRICE AS RTOTALSALES,
+			pro.PIUNITCOST AS RTOTALCOST,
+			pro.pfnum AS PFNUM,
+			pro.PICATEGORY AS CATEGORY
+		FROM
+			(
+			SELECT
+				pf.PSTARTDATE,pf.PENDDATE,pf.PFNUM,
+				pi.PINAME,pi.PIPRICE,pi.PIAMOUNT,pi.PISUMPRICE,pi.PIUNITCOST,pi.PICATEGORY
+			FROM
+				PRODUCTFORM pf , PRODUCTITEM pi
+			WHERE
+				pf.PFNUM = pi.PFNUM
+			) pro
+		WHERE
+			 #{rmonth} BETWEEN TO_CHAR(pro.PSTARTDATE, 'YYYY-MM') AND TO_CHAR(pro.PENDDATE, 'YYYY-MM')
+	</select>
+	
+	<!-- 리베뉴에 검색값이 있는지 확인하는 sql -->
+	<select id="checkRevenueExists" parameterType="string" resultType="int">
+    	SELECT COUNT(*) FROM REVENUE WHERE TO_CHAR(RMONTH, 'YYYY-MM') = #{rmonth}
+	</select>
+	
+	<!-- 리베뉴컴포넌트가 새로고침 됬을때 반환하는 sql -->
+	<select id="selectAllRevenue" parameterType="string" resultType="rvo">
+    	SELECT 
+    		RMONTH,RTOTALQTY,RTOTALSALES,RTOTALCOST,RTOTALMARGIN,PFNUM 
+    	FROM 
+    		REVENUE 
+    	WHERE 
+    		TO_CHAR(RMONTH, 'YYYY-MM') = #{rmonth}
+	</select>
+</mapper>

@@ -1,5 +1,6 @@
 package kr.co.ictedu.projectBack.controller.survey;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,12 +50,6 @@ public class SurveyController {
 		
 	}
 	
-	@DeleteMapping("/delOldRequest")
-	public ResponseEntity<String> delRequest() {
-		service.delRequest();
-		return ResponseEntity.ok("success");
-	}
-	
 	/**
 	 * @return
 	 * @detail
@@ -80,5 +75,17 @@ public class SurveyController {
 	public List<Map<String, Object>> getAllRequest() {
 		List<Map<String, Object>> reqMap = service.getAllRequest();
 		return reqMap;
+	}
+	
+	@GetMapping("/getQuestions")
+	public List<String> getQuestions(@RequestParam(name = "svnum") int svnum) {
+		List questionsList = service.getQuestions(svnum);
+		return questionsList;
+	}
+	
+	@DeleteMapping("/delOldRequest")
+	public ResponseEntity<String> delRequest() {
+		service.delRequest();
+		return ResponseEntity.ok("success");
 	}
 }

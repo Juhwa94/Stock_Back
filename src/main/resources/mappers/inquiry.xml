@@ -4,14 +4,14 @@
 
 	<insert id="add" parameterType="invo">
 		insert into inquiry values(inquiry_seq.nextVal,#{ititle},
-		#{iwriter},#{icontent},sysdate,#{imgn},#{membernum})
+		#{iwriter},#{icontent},sysdate,#{imgn},#{membernum},#{secret})
 	</insert>
 
     <select id="list" resultType="invo" parameterType="map">
-		SELECT inum,ititle,iwriter,icontent,idate,imgn,row_num
+		SELECT inum,ititle,iwriter,icontent,idate,imgn,membernum, secret, row_num
 		FROM (
 		
-		SELECT inum,ititle,iwriter,icontent,idate,imgn,
+		SELECT inum,ititle,iwriter,icontent,idate,imgn, membernum, secret,
 		ROW_NUMBER() OVER(ORDER BY inum desc) AS row_num FROM inquiry
 		
 		<if test="searchType != null and searchValue != null">
