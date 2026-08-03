@@ -19,16 +19,17 @@ public class ProjectBackApplication {
 	// spring boot에서 비동기식 외부 접속[Cros Allow Origin]을 허용해주기 위한 설정
 		// 빈으로 등록 - 스프링 컨테이너가 관리할 객체 <bean ~
 		@Bean
+		@Configuration
 		public WebMvcConfigurer crosConfigurer() {
 			return new WebMvcConfigurer() {
 				@Override
 				public void addCorsMappings(CorsRegistry registry) {
 					System.out.println("Cros Allow Origin 실행!");
-					registry.addMapping("/**")
-					.allowedOrigins(allowedOrigins)
-					.allowCredentials(true)
-					.allowedHeaders("*")
-					.allowedMethods("*").maxAge(3600);
+					registry.addMapping("/api/**")
+          		      .allowedOrigins("https://stockfront-production.up.railway.app")
+           		      .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+             	      .allowedHeaders("*")
+            	      .allowCredentials(true);
 				}
 			};
 		}
