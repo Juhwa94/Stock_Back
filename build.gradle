@@ -65,3 +65,11 @@ tasks.named('test') {
 tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
+
+jar {
+    enabled = false
+}
+
+bootJar {
+    archiveFileName = 'app.jar' // jar 파일 이름을 app.jar로 고정
+}
