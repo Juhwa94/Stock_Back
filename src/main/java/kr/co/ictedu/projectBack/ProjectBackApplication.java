@@ -1,5 +1,6 @@
 package kr.co.ictedu.projectBack;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

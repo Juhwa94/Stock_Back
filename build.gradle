@@ -37,6 +37,8 @@ dependencies {
 	//aop aspect lib
 	implementation 'org.springframework.boot:spring-boot-starter-aspectj'
 	
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	compileOnly 'org.projectlombok:lombok'
 	// Source: https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc8:21.3.0.0'
