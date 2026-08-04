@@ -18,6 +18,7 @@ import kr.co.ictedu.projectBack.vo.MemberVO;
 
 @RestController
 @RequestMapping("/api/login")
+@CrossOrigin(origins = "https://stockfront-production.up.railway.app", allowCredentials = "true")
 public class LoginController {
 	@Autowired
 	private LoginService loginService;

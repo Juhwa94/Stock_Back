@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/survey")
+@CrossOrigin(origins = "https://stockfront-production.up.railway.app", allowCredentials = "true")
 public class SurveyController {
 
 	@Autowired
