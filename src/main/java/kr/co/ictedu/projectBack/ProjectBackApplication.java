@@ -19,7 +19,7 @@ public class ProjectBackApplication {
 	}
 	// spring boot에서 비동기식 외부 접속[Cros Allow Origin]을 허용해주기 위한 설정
 		// 빈으로 등록 - 스프링 컨테이너가 관리할 객체 <bean ~
-		@Configuration
+
 		public WebMvcConfigurer crosConfigurer() {
 			return new WebMvcConfigurer() {
 				@Override
