@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +27,12 @@ import kr.co.ictedu.projectBack.service.CommunityService;
 import kr.co.ictedu.projectBack.vo.CommunityVO;
 import kr.co.ictedu.projectBack.vo.PageVO;
 
+@CrossOrigin(
+    origins = {
+        "https://stockfront-production.up.railway.app",
+        "http://localhost:3000",
+        "http://localhost:5173"
+    }, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/community")
 public class CommunityController {
