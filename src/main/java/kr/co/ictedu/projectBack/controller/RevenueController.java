@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-
+@CrossOrigin(origins = "https://stockfront-production.up.railway.app")
 @RestController
 @RequestMapping("/api/revenue")
 public class RevenueController {
