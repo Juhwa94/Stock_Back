@@ -47,3 +47,4 @@ public class RevenueController {
         
         return revenueService.returnShareChartData(rmonth);
     }
+}
