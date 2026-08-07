@@ -23,18 +23,27 @@ public class RevenueController {
 	@Autowired
 	private RevenueService revenueService;
 	
-	@GetMapping("/revenueDataSet")
-	public RevenueVO revenueDataSet(@RequestParam("rmonth") String rmonth) {
-		System.out.println(rmonth);
-		RevenueVO rvo = revenueService.returnRevenue(rmonth);	
-		// "MARGIN" : 마진 , 나머지 : 컬럼명
-		return rvo;
-	}
-	
-	@GetMapping("/shareChartDataSet")
-	public List<Map<String, Object>> shareChartDataSet(@RequestParam("rmonth") String rmonth) {
-		System.out.println("원형차트 데이터셋 추출기 생성");
-		return revenueService.returnShareChartData(rmonth);
-	}
-	
-}
+	@CrossOrigin(origins = "https://stockfront-production.up.railway.app")
+    @GetMapping("/revenueDataSet")
+    public RevenueVO revenueDataSet(@RequestParam("rmonth") String rmonth) {
+        // 프론트에서 큰따옴표("")가 포함되어 들어오는 경우 제거
+        if (rmonth != null) {
+            rmonth = rmonth.replace("\"", "");
+        }
+        System.out.println("수익 데이터 조회 rmonth: " + rmonth);
+        
+        RevenueVO rvo = revenueService.returnRevenue(rmonth);   
+        return rvo;
+    }
+    
+    @CrossOrigin(origins = "https://stockfront-production.up.railway.app")
+    @GetMapping("/shareChartDataSet")
+    public List<Map<String, Object>> shareChartDataSet(@RequestParam("rmonth") String rmonth) {
+        // 프론트에서 큰따옴표("")가 포함되어 들어오는 경우 제거
+        if (rmonth != null) {
+            rmonth = rmonth.replace("\"", "");
+        }
+        System.out.println("원형차트 데이터셋 추출기 생성 rmonth: " + rmonth);
+        
+        return revenueService.returnShareChartData(rmonth);
+    }
